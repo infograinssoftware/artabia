@@ -7,7 +7,7 @@
           <h1 class="text-3xl mb-8">Contact Us</h1>
           <form class="space-y-6" action="#" method="POST">
             <div>
-              <label for="title" class="block text-sm font-medium text-gray-700 font-bold   ">
+              <label for="title" class="block text-sm font-medium text-gray-700 font-bold">
                Title
               </label>
               <div class="mt-1">
@@ -62,7 +62,14 @@ export default {
 
 
   name: "Contact",
-  components: { VueRecaptcha }
+  components: { VueRecaptcha },
+  data(){
+    return{
+      title : null,
+      description : null,
+      email : null,
+    }
+  }
 }
 </script>
 

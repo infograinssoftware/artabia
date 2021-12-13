@@ -56,13 +56,11 @@
         </div>
       </div>
       <div class="collection-body">
-        <item-card :rightSide="false" v-for="card in cards"
-                   :key="card.id"
-                   :card="card"
-                   leftSideTextBottom="2.0 ETH"
-                   leftSideTextTop="Reverse price"
-                   leftSideTextTopClass="text-gray-800"
-        />
+        <nft-cards v-for="card in cards"
+                     :key="card.tokenId"
+                     :card="card"
+                     leftSideTextBottom = "0.1 ETH"
+                     leftSideTextTop="Current Price"/>
       </div>
     </div>
   </section>
@@ -78,11 +76,12 @@ import users from '@/UserProfiles.json'
 
 import ItemCard from '@/components/ItemCard'
 import ProfileCard from '@/components/ProfileCard'
+import NftCards from '@/components/NftCards'
 
 export default {
   name: 'Explore',
   components: {
-    ItemCard, ProfileCard
+    ItemCard, ProfileCard, NftCards
   },
   data() {
     return {
@@ -96,8 +95,49 @@ export default {
     }
   },
   async created() {
-    this.cards = cards
-    this.users = users
+    // this.cards = cards
+    // this.users = users
+    const aChain = 'rinkeby';
+     let connect_status = await im.connect(aChain);
+    console.log(connect_status, 'status')
+    this.im = im
+    const info = await fetch(`${BACKEND_URL}/order/trending`).then(res => res.json());
+    console.log("info is",info);
+    let results = [];
+    for(var i=0; i<info.orders.length;i++){
+      results.push(await Promise.all([
+      im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i]),
+      im.contracts.erc721ListingMarketplace.getListing(info.orders[i]),
+      im.contracts.erc721OrderMarketplace.getOrder(info.orders[i]),
+    ]))
+       
+    }
+    console.log('result is',results);
+    // // ;
+    let order_listings = []
+    for(let i = 0; i < results.length; i++)
+    {
+      for(let j = 0; j< results[i].length; j++)
+      {
+        if(results[i][j] != null){
+          order_listings.push(results[i][j])
+        }
+      }
+    }
+    console.log(order_listings, 'list of all the nfts')
+
+    let order_listing_image = null
+    let all_nft_data = []
+    for(let order_listing = 0; order_listing < order_listings.length; order_listing++){
+        // console.log(order_listings[order_listing],'order listing ');
+        // order_listing_image.push(order_listings[order_listing])
+
+      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then(res => res.json());
+      console.log(order_listing_image);
+      all_nft_data.push(Object.assign(order_listings[order_listing], {'tokenUri': order_listing_image}))
+    }
+    console.log(all_nft_data,'data after push')
+    this.cards = all_nft_data
 
   },
 

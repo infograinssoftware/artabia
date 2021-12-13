@@ -16,6 +16,7 @@
                             <b-icon icon="search" />
                             <input
                                 v-model.trim="searchQuery"
+                                @input="searchfun($event)"
                                 type="text"
                                 placeholder="Search items and account"
                             >
@@ -204,6 +205,10 @@
             
         },
         methods: {
+            searchfun(e){
+                
+                console.log(e, 'sdsdfsdfsdfsdf')
+            },
             toggleProfileMenu() {
                 this.profileMenuOpen = !this.profileMenuOpen
             },

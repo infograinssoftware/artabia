@@ -6,7 +6,7 @@
           <h1 class="hero-title">Bringing together artists from the entire <span>MENA</span> region</h1>
           <h3 class="hero-subtitle">To Explore, Collect, & Trade NFTs</h3>
           <div class="cta-btn">
-            Explore Marketplace
+            <a href="/explore" class="text-white">Explore </a>
           </div>
         </div>
         <div class="hero-image" id="feature_img">
@@ -135,7 +135,7 @@
                      :key="card.tokenId"
                      :card="card"
                      leftSideTextBottom = "0.1 ETH"
-                     leftSideTextTop="Current Price "/>
+                     leftSideTextTop="Current Price"/>
         </div>
        
       </div>

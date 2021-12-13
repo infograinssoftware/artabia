@@ -13,21 +13,22 @@
     </b-card-text>
     <template #footer>
       <div class="footer-slot">
-        <div class="price price flex px-3 py-2.5 items-center">
+        <div class="price price flex px-2 py-2.5 items-center">
           <span class="flex flex-col text-left">
             <span :class="leftSideTextTopClass">{{leftSideTextTop}} </span>
-            <span>{{ethPrice(card.price)}}</span>
+            <span v-if="card.price">{{ethPrice(card.price)}}</span>
+            <span v-if="card.offer">{{ethPrice(card.offer)}}</span>
           </span>
 
-          <span v-if="rightSide" class="flex flex-col text-right">
+          <span v-if="card.offer" class="flex flex-col text-right">
             <span> Ending in</span>
-            <span>0 d , 0 h m , 0 s</span>            
+            <span>{{card.offerPlacedAt}}</span>            
           </span>
           <!-- <b-dropdown id="dropdown" dropright class="m-2" icon="three-dots-vertical">
             <b-dropdown-item href="#">Transfer</b-dropdown-item>
             <b-dropdown-item href="#">List (On Marketplace)</b-dropdown-item>
           </b-dropdown> -->
-          <div class="carditem_dots">
+          <!-- <div class="carditem_dots">
             <b-dropdown dropright toggle-class="carditem_dots_tgl p-0 has-background-white btn-light" no-caret>
               <template #button-content>
                 <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon> 
@@ -35,7 +36,7 @@
               <b-dropdown-item href="#">Transfer</b-dropdown-item>
               <b-dropdown-item href="#">List (On Marketplace)</b-dropdown-item>
             </b-dropdown>
-          </div>
+          </div> -->
         </div>
       </div>
     </template>

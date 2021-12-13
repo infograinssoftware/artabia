@@ -22,8 +22,9 @@
         "axios": "^0.22.0",
         "bootstrap-vue": "^2.17.0",
         "core-js": "^3.6.5",
+        "ethereumjs-abi": "^0.6.8",
         "express": "^4.17.1",
-        "integration": "../artabianewintegrationcode",
+        "integration": "git+https://Artabia@bitbucket.org/Artabia/artabianewintegrationcode.git",
         "marked": "^3.0.7",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.28",
@@ -47,9 +48,5 @@
         "@vue/cli-plugin-vuex": "~4.5.0",
         "@vue/cli-service": "~4.5.0",
         "vue-template-compiler": "^2.6.11"
-    },
-    "optionalDependencies": {
-          "fsevents": "2.1.2"
     }
-    
 }
