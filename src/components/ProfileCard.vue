@@ -64,6 +64,8 @@
     .card-img-top {
         border-top-left-radius: 11px;
         border-top-right-radius: 11px;
+        width: 270px;
+        height: 160px;
     }
 
     .card-body {
