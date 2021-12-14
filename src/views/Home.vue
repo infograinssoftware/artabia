@@ -10,12 +10,14 @@
           </div>
         </div>
         <div class="hero-image" id="feature_img">
-          <img  v-bind:src="feature_id" alt="arrow up">
+          <img  v-bind:src="require('@/assets/images/hero-image.png')" alt="arrow up">
           <div class="container get-featured">
             <div class="flex justify-center">
               <figure class="flex items-center home_featured">
                 <b-link href="/contact" class="home_featured_link">
-                  Get featured on the homepage
+                  <span class="home_featSpan">
+                    Get featured on the homepage
+                  </span>
                   <img :src="require('@/assets/images/icons/up-arrow-icon.png')" alt="arrow up" >
                 </b-link>
               </figure>
@@ -321,7 +323,7 @@ section:last-child {
 .hero-section {
   width: 100%;
   /*background-image: url(http://localhost:1337/uploads/organizers_33657ce425.jpg);*/
-  /*background-image: url('~@/assets/images/hero-bg.jpg');*/
+  background-image: url('~@/assets/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -329,6 +331,7 @@ section:last-child {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
 .container {
@@ -382,6 +385,8 @@ section:last-child {
 .hero-image img {
   width: 100%;
   height: auto;
+  width: 50%;
+  margin: 0px auto;
 }
 
 .get-featured {
@@ -475,6 +480,13 @@ section:last-child {
   color: #8575c6 !important;
   text-decoration: none !important;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home_featured_link .home_featSpan{
+  text-align: left;
+  font-weight: bold;
 }
 
 @media screen and (min-width: 768px) {
@@ -516,7 +528,7 @@ section:last-child {
   }
 
   .hero-section {
-    height: auto;
+    /* height: auto; */
     background-size: cover;
   }
 

@@ -4,8 +4,8 @@
       <div class="cover_bg_box">
         <img :src="userCoverImg" class="cover_bg_img">
       </div>      
-       <img class="cover_bg_img" :src="userCoverImg" />
-       <img :src="image" class="cover_bg_img" />
+       <!-- <img class="cover_bg_img" :src="userCoverImg" />
+       <img :src="image" class="cover_bg_img" /> -->
         <div class="button-wrapper">
         <label class="custom-file-upload">
             <input type='file' @change="onFileChange"/>
@@ -191,6 +191,14 @@ data: {
   margin: auto;
 }
 
+.cover_bg_box{
+      height: 263px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
 @media screen and (min-width: 992px) {
   .container {
     max-width: 1300px;
@@ -238,5 +246,11 @@ input[type="file"] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 25px;
+}
+
+@media screen and (max-width:425px) {
+    .cover_bg_box{
+      height: 225px;
+    }
 }
 </style>

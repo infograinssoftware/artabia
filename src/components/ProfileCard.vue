@@ -76,8 +76,9 @@
         border-radius: 50%;
         transform: translateY(-35%);
         border: 3px solid #fff;
-        width: 45px;
-        height: auto;
+        width: 50px;
+        height: 50px;
+        background-color: #fff;
     }
 
     .username {

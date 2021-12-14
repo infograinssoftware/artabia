@@ -445,7 +445,10 @@
     background-origin: border-box;
     background-clip: content-box, border-box;
     cursor: pointer;
-    max-width: 64px;
+    /* max-width: 64px; */
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
 }
 
 .profile-avatar img {
