@@ -20,9 +20,14 @@
             <span v-if="card.offer">{{ethPrice(card.offer)}}</span>
           </span>
 
-          <span v-if="card.offer" class="flex flex-col text-right">
+          <span v-if="!card.offer" class="flex flex-col text-right">
+              
             <span> Ending in</span>
-            <span>{{card.offerPlacedAt}}</span>            
+            <span>
+              <vue-countdown :time="`${biddingTime(parseInt(card.offerPlacedAt))}`" v-slot="{ days, hours, minutes, seconds }">
+                {{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s
+              </vue-countdown>  
+            </span>            
           </span>
           <!-- <b-dropdown id="dropdown" dropright class="m-2" icon="three-dots-vertical">
             <b-dropdown-item href="#">Transfer</b-dropdown-item>
@@ -44,13 +49,17 @@
 </template>
 
 <script>
-
+import VueCountdown from '@chenfengyuan/vue-countdown';
 export default {
+  components: {VueCountdown},
   name: 'NftCards',
   data(){
+    
     return {
       nft_user : null,
-      usernftprofile : null
+      usernftprofile : null,
+      time : Date()
+
     }
   },
   props: {
@@ -95,6 +104,9 @@ export default {
     ethPrice(weiPrice){
       const etherValue = im.web3.utils.fromWei(weiPrice, 'ether');
       return etherValue
+    },
+    biddingTime(endTime){
+      return endTime - Date.now()
     }
   },
 }

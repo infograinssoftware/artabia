@@ -10,15 +10,15 @@
                 >
                     <router-link to="/" class="result-item">
                         <div class="result-avatar">
-                            <img :src="item.avatar" alt="avatar">
+                            <img :src="require('@/assets/images/icons/trending-icon.png')" alt="avatar">
                         </div>
                         <div class="result-info-container">
                             <span class="result-title">
                                 {{ item.name }}
                             </span>
-                            <span class="result-info">
-                                {{ item.type }}
-                            </span>
+                            <!-- <span class="result-info">
+                                {{ item.id }}
+                            </span> -->
                         </div>
                     </router-link>
                 </div>
@@ -32,7 +32,7 @@
                 >
                     <router-link to="/" class="result-item">
                         <div class="result-avatar">
-                            <img :src="user.avatar" alt="avatar">
+                            <img :src="user.profileImage" alt="avatar">
                         </div>
                         <div class="result-info-container">
                             <span class="result-title">
