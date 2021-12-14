@@ -206,7 +206,6 @@
             label="Ends at"
             type="datetime-local"
             :value="endsAt"
-            @input="endsAt = setTimestamp($event.target.value)"
             class="
               focus:outline-none
               border
@@ -219,6 +218,8 @@
               rounded-md
             "
           />
+          <!-- <input type="date"> -->
+
 
           <text-input
             v-if="type === 'multiple' && putOnMarketplace"
@@ -378,10 +379,10 @@ export default {
       this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC"
       console.log(this.chain, this.chainSelect, 'this is the chain');
     },
-    setTimestamp(date) {
-      const datum = Date.parse(date);
-      return datum / 1000;
-    },
+    // setTimestamp(date) {
+    //   const datum = Date.parse(date);
+    //   return datum / 1000;
+    // },
 
     onImage(e) {
       this.image = this.src = e;
