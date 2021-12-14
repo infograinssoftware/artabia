@@ -97,6 +97,7 @@ export default {
           chain: 'rinkeby', 
           address: im.account
       };
+      console.log('mmmmmmmmmmmmoooooooorrrrrrraaaaaliiiiiiiiiiiss')
       const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);;
       console.log(polygonNFTs, 'sdfosadfiosiodf');
       // console.log(transfersNFT);

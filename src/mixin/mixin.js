@@ -78,11 +78,11 @@ export default {
 
 
 
-    Moralis.initialize("L15MvwXOmv99UARyTIjCmcBxucgHhUCRUChKvrv3");
+    Moralis.initialize("cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM");
 
-    Moralis.serverURL = 'https://97gojp87qynn.usemoralis.com:2053/server'
+    Moralis.serverURL = 'https://rpzgvjogtika.grandmoralis.com:2053/server'
 
-    if(!localStorage.getItem('Parse/L15MvwXOmv99UARyTIjCmcBxucgHhUCRUChKvrv3/currentUser')){
+    if(!localStorage.getItem('Parse/cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM/currentUser')){
       Moralis.authenticate().then(function (user) {
         console.log(user.get('ethAddress'))
       })

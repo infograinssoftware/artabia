@@ -1,10 +1,10 @@
 <template>
     <transition name="fade">
         <div v-if="isOpen" class="search-results">
-            <div v-if="results.items" class="result-category">
-                <span class="result-category-title">Items</span>
+            <div v-if="results.nfts" class="result-category">
+                <span class="result-category-title">NFTs</span>
                 <div
-                    v-for="item in results.items"
+                    v-for="item in results.nfts"
                     :key="item.id"
                     @click="emitClick"
                 >

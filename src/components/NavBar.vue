@@ -67,8 +67,7 @@
                 <div class="profile-nav-container" v-if="user">
                     <div class="profile-avatar" @click="toggleProfileMenu">
                         <router-link to="/profile">
-                            <!-- <img :src="require(`@/${user.profileImage}`)" alt="avatar"> -->
-                            <img :src="require(`@/assets/images/Default_Profile_Picture.png`)" alt="avatar">
+                            <img  :src="user.user.profileImage? user.user.profileImage :require(`@/assets/images/Default_Profile_Picture.png`)" alt="avatar">
                         </router-link>
                     </div>
                     <!-- <transition name="fade">
@@ -192,12 +191,13 @@
             }
         },
         async created() {
-            let userData = localStorage.getItem('userdata')
+            let userData = JSON.parse(localStorage.getItem('userdata'))
             if (userData == null){
                 this.user = null
             }
             else{
                 this.user = userData
+
                 let userAddress = await im.connect('rinkeby')
                 let bbl = await im.web3.eth.getBalance(userAddress);
                 this.userBalance = im.web3.utils.fromWei(bbl, 'ether').slice(0,6);
@@ -205,9 +205,10 @@
             
         },
         methods: {
-            searchfun(e){
-                
-                console.log(e.target.value, 'sdsdfsdfsdfsdf')
+            async searchfun(e){
+                const searchedData = await this.axios.post(`https://www.artabia.com:3001/search`,{"page":0,"amount":0,"query":e.target.value})
+                console.log(searchedData, 'result for search')
+                this.results = searchedData.data
             },
             toggleProfileMenu() {
                 this.profileMenuOpen = !this.profileMenuOpen
@@ -218,10 +219,11 @@
             async loginUser(){
                 let userAddress = await im.connect('rinkeby')
                 let userdata = await window.login({"im": im, "account" : userAddress})
+                this.user = userdata
+                console.log(this.user, 'this is the user ')
                 userdata = JSON.stringify(userdata);
                 console.log(userdata, 'after login')
                 localStorage.setItem('userdata',  userdata);
-                this.user = userdata;
                 let bbl = await im.web3.eth.getBalance(userAddress);
                 console.log(bbl, 'bbl');
                 this.userBalance = im.web3.utils.fromWei(bbl, 'ether').slice(0,6);

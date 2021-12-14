@@ -6,7 +6,7 @@
           <h1 class="hero-title">Bringing together artists from the entire <span>MENA</span> region</h1>
           <h3 class="hero-subtitle">To Explore, Collect, & Trade NFTs</h3>
           <div class="cta-btn">
-            <a href="/explore" class="text-white">Explore </a>
+            <a href="/explore" class="text-white">Explore Marketplace</a>
           </div>
         </div>
         <div class="hero-image" id="feature_img">
