@@ -207,7 +207,7 @@
         methods: {
             searchfun(e){
                 
-                console.log(e, 'sdsdfsdfsdfsdf')
+                console.log(e.target.value, 'sdsdfsdfsdfsdf')
             },
             toggleProfileMenu() {
                 this.profileMenuOpen = !this.profileMenuOpen
