@@ -25,7 +25,7 @@
             <span> Ending in</span>
             <span>
               <vue-countdown :time="`${biddingTime(parseInt(card.offerPlacedAt))}`" v-slot="{ days, hours, minutes, seconds }">
-                {{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s
+                {{ days }} d, {{ hours }} h, {{ minutes }} m, {{ seconds }} s
               </vue-countdown>  
             </span>            
           </span>
