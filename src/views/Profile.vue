@@ -91,13 +91,17 @@ export default {
 
     // console.log(this.userCoverImg,  this.cards , 'youtube')
     // const option = { chain: "rinkeby", address: "0xaa737df2b2c4175205af4644cb4e44d7b9cee5d4"};
-    //   const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(option);
-      // console.log(transfersNFT, ' NFT transfer');
+    // console.log(this.im.account, 'account nft')
       const options = { 
-          chain: 'rinkeby', 
-          address: im.account
+        chain: 'rinkeby',
+        address: '0xAA737Df2b2C4175205Af4644cb4e44d7b9CeE5D4'
       };
+<<<<<<< HEAD
       console.log('mmmmmmmmmmmmoooooooorrr')
+=======
+        const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(options);
+        console.log(transfersNFT, ' NFT transfer');
+>>>>>>> 523fe38969eb382551088ac997da074b52eba267
       const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);;
       console.log(polygonNFTs, 'sdfosadfiosiodf');
       // console.log(transfersNFT);

@@ -20,8 +20,7 @@
             <span v-if="card.offer">{{ethPrice(card.offer)}}</span>
           </span>
 
-          <span v-if="!card.offer" class="flex flex-col text-right">
-              
+          <span v-if="card.offer" class="flex flex-col text-right">
             <span> Ending in</span>
             <span>
               <vue-countdown :time="`${biddingTime(parseInt(card.offerPlacedAt))}`" v-slot="{ days, hours, minutes, seconds }">
@@ -58,8 +57,6 @@ export default {
     return {
       nft_user : null,
       usernftprofile : null,
-      time : Date()
-
     }
   },
   props: {
