@@ -150,10 +150,14 @@ export default {
   display: block;
   width: 100%;
   text-align: center;
-  color: #7259cb;
+  justify-content: space-between;
+  background: linear-gradient( 45deg, #B5A3FE, #8F79E4);
+  color: #fff;
   font-weight: bold;
   font-size: 0.9rem;
+  border-radius: 0px 0px 10px 10px;
 }
+
 .carditem_dots {
   margin-left: auto;
 }
