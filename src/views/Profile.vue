@@ -94,15 +94,12 @@ export default {
     // console.log(this.im.account, 'account nft')
       const options = { 
         chain: 'rinkeby',
-        address: '0xAA737Df2b2C4175205Af4644cb4e44d7b9CeE5D4'
+        address: '0X79319A973BE6C6F0CBAD2206EA4F6573A9ECF223'
       };
-<<<<<<< HEAD
       console.log('mmmmmmmmmmmmoooooooorrr')
-=======
         const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(options);
         console.log(transfersNFT, ' NFT transfer');
->>>>>>> 523fe38969eb382551088ac997da074b52eba267
-      const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);;
+      const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
       console.log(polygonNFTs, 'sdfosadfiosiodf');
       // console.log(transfersNFT);
       let content = []

@@ -1,7 +1,7 @@
 <template>
     <b-navbar toggleable="lg" type="dark" variant="dark" class="">
         <div class="container">
-            <b-navbar-brand href="." class="logo-container">
+            <b-navbar-brand href="/" class="logo-container">
                 <img :src="require('@/assets/images/logo.svg')" alt="Artabia Logo">
             </b-navbar-brand>
             <b-navbar-toggle target="nav-collapse">

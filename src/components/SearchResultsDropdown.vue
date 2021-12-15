@@ -10,7 +10,7 @@
                 >
                     <router-link to="/" class="result-item">
                         <div class="result-avatar">
-                            <img :src="require('@/assets/images/icons/trending-icon.png')" alt="avatar">
+                            <img :src="`https://artabia.com:3001/image/${item.id}.jpg`" alt="avatar">
                         </div>
                         <div class="result-info-container">
                             <span class="result-title">

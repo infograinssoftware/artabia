@@ -201,12 +201,22 @@
             :name= this.chainSelect
           />
 
-          <input
-            v-if="limited.active"
-            label="Ends at"
+          <!-- <input
+           
+            id="datepick"
+            
             type="datetime-local"
-            :value="endsAt"
-            class="
+           
+            
+            
+          /> -->
+          <input 
+           :value="endsAt"
+          label="Ends at"
+          @input="endsAt = setTimestamp($event.target.value)"
+          v-if="limited.active"
+          type="datetime-local" 
+          class="
               focus:outline-none
               border
               p-2
@@ -216,9 +226,7 @@
               sm:text-sm
               border-gray-300
               rounded-md
-            "
-          />
-          <!-- <input type="date"> -->
+            ">
 
 
           <text-input
@@ -379,10 +387,12 @@ export default {
       this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC"
       console.log(this.chain, this.chainSelect, 'this is the chain');
     },
-    // setTimestamp(date) {
-    //   const datum = Date.parse(date);
-    //   return datum / 1000;
-    // },
+    setTimestamp(date) {
+      this.endsAt = date
+      const datum = Date.parse(date);
+      console.log(datum, 'fdfd')
+      return datum / 1000;
+    },
 
     onImage(e) {
       this.image = this.src = e;
@@ -409,8 +419,10 @@ export default {
       this.limited.active = false;
       this.open.active = false;
       this[value].active = true;
+      console.log(this[value].active, this.limited.active, 'good')
     },
     validate() {
+      console.log('submittion')
       if (
         this.name &&
         (this.type == "single" || this.amount) &&
@@ -419,11 +431,12 @@ export default {
         this.description &&
         !!this.image.name &&
         (!this.fixed.active || this.price) &&
-        (!this.limited.active || this.endsAt) &&
+        (!this.limited.active || '1639748520000') &&
         (this.putOnMarketplace
           ? this.fixed.active || this.limited.active || this.open.active
           : true)
       ) {
+        
         this.submit();
       }
     },
@@ -518,7 +531,7 @@ export default {
               await window.im.contracts.artabiaErc721.mintAndCreateAuction(
                 id,
                 royalty,
-                this.endsAt
+                "1639748520000"
               );
             contract = "erc721AuctionMarketplace";
           }
