@@ -7,6 +7,15 @@
   opacity: .5;
   position: relative;
 }
+.single_select:hover{
+  text-decoration: none;
+}
+
+.multi_select:hover{
+  text-decoration: none;
+  color: #9ebc9b !important;
+
+}
 .multi_select::before {
   content: 'Coming Soon';
   position: absolute;
@@ -17,7 +26,7 @@
   /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */
-  color: #2b2c2c;
+  color: #8ba4b2;
   font-size: 18px;
   font-weight: 600;
   text-shadow: 0 0 10px #fffdfd;
@@ -36,8 +45,8 @@
         "Multiple" if you want to sell one collectible multiple times</p>
     </div>
 
-    <figure class="flex items-center justify-around my-10">
-      <icon link="/create?type=single" :img="single.path" :title="single.name"/>
+    <figure class="flex items-center justify-around my-10" style="flex-wrap:wrap">
+      <icon link="/create?type=single" :img="single.path" :title="single.name" class="single_select"/>
       <icon link="" :img="multiple.path" :title="multiple.name" class="multi_select"/>
     </figure>
 

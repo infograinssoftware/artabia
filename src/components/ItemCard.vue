@@ -1,4 +1,5 @@
 <template>
+<a href="javascript" class="trending_itemCardHref">
   <b-card
     v-if="card"
     :img-src="card"
@@ -40,6 +41,7 @@
       </div>
     </template>
   </b-card>
+</a>
 </template>
 
 <script>
@@ -133,5 +135,9 @@ export default {
   color: #ddd;
   border: 0;
   padding: 0;
+}
+.trending_itemCardHref{
+  text-decoration: none;
+  color: inherit;
 }
 </style>
