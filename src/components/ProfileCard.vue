@@ -1,18 +1,18 @@
 <template>
     <b-card
         v-if="user"
-        :img-src="user.coverImage"
+        :img-src="user.coverImage? user.coverImage : defaultImg"
         :img-alt="user.name"
         img-top
         tag="article"
         class="mb-2"
     >
-        <img :src="user.profileImage" alt="" class="user-avatar">
-        <h4 class="card-title">{{ user.name }}</h4>
+        <img :src="user.profileImage ? user.profileImage : defaultImg" alt="" class="user-avatar">
+        <h4 class="card-title">{{ user.name ? user.name : shortenAddress(user.id) }}</h4>
         <router-link to="#" class="username">
-            <span>@{{ user.username }}</span>
+            <span>@{{ user.username  ? user.name : shortenAddress(user.id)}}</span>
         </router-link>
-        <span class="user-bio">{{ user.bio }}</span>
+        <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span>
         <template #footer>
             <div class="footer-slot">
                 <div class="followers">
@@ -32,6 +32,11 @@
 <script>
     import moment from 'moment-timezone'
     export default {
+        data(){
+            return{
+                defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80"
+            }
+        },
         name: 'ItemCard',
         props: {
             user: {
@@ -45,9 +50,14 @@
                     return moment(this.card.user.createdDate).format('MMM Do, YYYY')
                 }
                 return ''
+            },
+        },
+        methods: {
+            shortenAddress(ethAddress) {
+                console.log(ethAddress, 'user address')
+                return ethAddress.substring(0, 6) + '...' + ethAddress.substring(ethAddress.length - 4)
             }
-        }
-    }
+    }   }
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
 <template>
-<a href="javascript:;" class="nft-cardClickable">
+<a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
   <b-card
     v-if="card"
-    :img-src="card.tokenUri.image"
+    :img-src="card.tokenUri.image ? card.tokenUri.image   :  defaultImg"
     :img-alt="card.tokenUri.image"
     img-top
     tag="article"
@@ -59,6 +59,7 @@ export default {
     return {
       nft_user : null,
       usernftprofile : null,
+      defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80",
     }
   },
   props: {

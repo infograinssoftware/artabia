@@ -1,8 +1,8 @@
 <template>
-<a href="javascript" class="trending_itemCardHref">
+<a :href="`/view-order/${card.tokenId}`" class="trending_itemCardHref">
   <b-card
     v-if="card"
-    :img-src="card"
+    :img-src="card ? card :  defaultImg"
     :img-alt="card"
     img-top
     tag="article"
@@ -48,6 +48,11 @@
 
 export default {
   name: 'ItemCard',
+  data(){
+    return{
+      defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80",
+    }
+  },
   props: {
     card: {
       type: null,

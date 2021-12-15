@@ -1,16 +1,21 @@
 <template>
-  <div class="home">    
+  <div class="home">
     <section class="hero-section mt-0a" :style="cssProps">
       <div class="container hero-container">
         <div class="hero-info">
-          <h1 class="hero-title">Bringing together artists from the entire <span>MENA</span> region</h1>
+          <h1 class="hero-title">
+            Bringing together artists from the entire <span>MENA</span> region
+          </h1>
           <h3 class="hero-subtitle">To Explore, Collect, & Trade NFTs</h3>
           <div class="cta-btn">
             <a href="/explore" class="text-white">Explore Marketplace</a>
           </div>
         </div>
         <div class="hero-image" id="feature_img">
-          <img  v-bind:src="require('@/assets/images/hero-image.png')" alt="arrow up">
+          <img
+            v-bind:src="require('@/assets/images/hero-image.png')"
+            alt="arrow up"
+          />
           <div class="container get-featured">
             <div class="flex justify-center">
               <figure class="flex items-center home_featured">
@@ -18,18 +23,25 @@
                   <span class="home_featSpan">
                     Get featured on the homepage
                   </span>
-                  <img :src="require('@/assets/images/icons/up-arrow-icon.png')" alt="arrow up" >
+                  <img
+                    :src="require('@/assets/images/icons/up-arrow-icon.png')"
+                    alt="arrow up"
+                  />
                 </b-link>
               </figure>
             </div>
           </div>
         </div>
-      </div>      
+      </div>
     </section>
     <section class="trending-section">
       <div class="container">
         <div class="collection-header flex-col md:flex-row">
-          <img :src="require('@/assets/images/icons/trending-icon.png')" alt="trending icon" class="collection-avatar">
+          <img
+            :src="require('@/assets/images/icons/trending-icon.png')"
+            alt="trending icon"
+            class="collection-avatar"
+          />
           <span class="collection-title">Trending</span>
           <div class="collection-tags">
             <div class="collection-tag">
@@ -37,7 +49,7 @@
                 :src="require('@/assets/images/icons/hourglass-icon.png')"
                 alt="timed auctions icon"
                 class="tag-avatar"
-              >
+              />
               <span>Timed Auctions</span>
             </div>
             <div class="collection-tag">
@@ -45,7 +57,7 @@
                 :src="require('@/assets/images/icons/infinity-icon.png')"
                 alt="open for bids icon"
                 class="tag-avatar"
-              >
+              />
               <span>Open for bids</span>
             </div>
             <div class="collection-tag">
@@ -53,17 +65,25 @@
                 :src="require('@/assets/images/icons/price-tag-icon.png')"
                 alt="Fixed Price icon"
                 class="tag-avatar"
-              >
+              />
               <span>Fixed Price</span>
             </div>
           </div>
         </div>
         <div class="collection-body">
-          <item-card v-for="card in cards"
+          <!-- <item-card v-for="card in cards"
                      :key="card.image"
                      :card="card"
                      leftSideTextBottom="0,1 ETH"
-                     leftSideTextTop="Current bid"/>
+                     leftSideTextTop="Current bid"/> -->
+          <nft-cards
+            v-for="card in cards"
+            :key="card.tokenId"
+            :card="card"
+            leftSideTextBottom="0.1 ETH"
+            leftSideTextTop="Current Price"
+          />
+          <Spinner v-if="!trendingLoader" name="ripple" color="#8c65d3" />
         </div>
       </div>
     </section>
@@ -71,16 +91,20 @@
       <div class="container">
         <div class="collection-header md:flex-row flex flex-col">
           <div class="flex space-x-2">
-            <img :src="require('@/assets/images/icons/explore-icon.png')" alt="explore icon" class="collection-avatar">
+            <img
+              :src="require('@/assets/images/icons/explore-icon.png')"
+              alt="explore icon"
+              class="collection-avatar"
+            />
             <span class="collection-title">Explore</span>
           </div>
-          <div class="collection-tags  ">
+          <div class="collection-tags">
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="all nfts"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>All NFTs</span>
             </div>
             <div class="collection-tag">
@@ -88,7 +112,7 @@
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="artwork"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>Artwork</span>
             </div>
             <div class="collection-tag">
@@ -96,7 +120,7 @@
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="photography"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>Photography</span>
             </div>
             <div class="collection-tag">
@@ -104,7 +128,7 @@
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="audio"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>Audio</span>
             </div>
             <div class="collection-tag">
@@ -112,7 +136,7 @@
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="video"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>Video</span>
             </div>
             <div class="collection-tag">
@@ -120,10 +144,9 @@
                 :src="require('@/assets/images/icons/tag-icon.png')"
                 alt="collectibles"
                 class="tag-avatar explore-tag"
-              >
+              />
               <span>Collectibles</span>
             </div>
-
           </div>
         </div>
         <div class="collection-body">
@@ -133,49 +156,63 @@
                      leftSideTextBottom="0,1 ETH"
                      leftSideTextTop="Current bid"/>
         </div> -->
-          <nft-cards  v-for="card in cards"
-                     :key="card.tokenId"
-                     :card="card"
-                     leftSideTextBottom = "0.1 ETH"
-                     leftSideTextTop="Current Price" />  
+          <nft-cards
+            v-for="card in cards"
+            :key="card.tokenId"
+            :card="card"
+            leftSideTextBottom="0.1 ETH"
+            leftSideTextTop="Current Price"
+          />
+          <Spinner v-if="!exploreLoader" name="ripple" color="#8c65d3" />
         </div>
-       
       </div>
     </section>
     <section class="top-creators-section">
       <div class="container">
         <div class="collection-header">
-          <img :src="require('@/assets/images/icons/top-creators-icon.png')" alt="top-creators icon"
-               class="collection-avatar">
+          <img
+            :src="require('@/assets/images/icons/top-creators-icon.png')"
+            alt="top-creators icon"
+            class="collection-avatar"
+          />
           <span class="collection-title">Top Creators</span>
           <div class="collection-tags">
-            <div class="collection-tag view-all">
+            <!-- <div class="collection-tag view-all">
               View all creators
-              <font-awesome-icon :icon="['fas', 'arrow-right']" size="lg" class="arrow-right"/>
+              <font-awesome-icon
+                :icon="['fas', 'arrow-right']"
+                size="lg"
+                class="arrow-right"
+              />
+            </div> -->
+          </div>
+        </div>
+        <div>
+          <Spinner v-if="!userLoader" name="ripple" color="#8c65d3" />
+          <div v-for="user in users" :key="user.id">
+            <div class="collection-body">
+              <profile-card v-for="u in user" :key="u.name" :user="u" />
             </div>
           </div>
         </div>
-        <div  v-for="user in users" :key="user.id" >
-        <div class="collection-body">
-             <profile-card v-for="u in user" :key="u.name" :user="u"/>
-        </div>
-          </div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import ItemCard from '@/components/ItemCard'
-import ProfileCard from '@/components/ProfileCard'
-import NftCards from '@/components/NftCards'
-
+import ItemCard from "@/components/ItemCard";
+import ProfileCard from "@/components/ProfileCard";
+import NftCards from "@/components/NftCards";
+import Spinner from "vue-spinkit";
 // import NftCards from '../components/nftCards.vue'
-
 
 export default {
   components: {
-    ItemCard, ProfileCard, NftCards
+    ItemCard,
+    ProfileCard,
+    NftCards,
+    Spinner,
   },
   // pro
   //   NftCardsps: {
@@ -185,16 +222,16 @@ export default {
     return {
       cards: null,
       users: null,
-      feature_id : null,
-      top_nft : null,
-      trendingLoader : false,
-      exploreLoader : false,
-      userLoader : false,
-      leftSideTextB : "0.1 ETH",
+      feature_id: null,
+      top_nft: null,
+      trendingLoader: false,
+      exploreLoader: false,
+      userLoader: false,
+      leftSideTextB: "0.1 ETH",
       leftSideTextT: null,
       cssProps: {
-        backgroundImage: ''
-      }
+        backgroundImage: "",
+      },
     }
   },
   async created() {
@@ -202,55 +239,68 @@ export default {
     //     container: NftCards,
     //     canCancel: false,
     //   });
-    
-    this.leftSideTextB = "0.1 ETH"
+
+    this.leftSideTextB = "0.1 ETH";
     // console.log(users)
     // this.cards = cards
     // this.users = users
 
-   const aChain = 'rinkeby';
-     let connect_status = await im.connect(aChain);
-    console.log(connect_status, 'status')
-    this.im = im
+    const aChain = "rinkeby";
+    let connect_status = await im.connect(aChain);
+    console.log(connect_status, "status");
+    this.im = im;
 
-    const info = await fetch(`${BACKEND_URL}/order/trending`).then(res => res.json());
-    console.log("info is",info);
+    const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
+      res.json()
+    );
+    console.log("info is", info);
     let results = [];
-    for(var i=0; i<info.orders.length;i++){
-      results.push(await Promise.all([
-      im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i]),
-      im.contracts.erc721ListingMarketplace.getListing(info.orders[i]),
-      im.contracts.erc721OrderMarketplace.getOrder(info.orders[i]),
-    ]))
-       
+    for (var i = 0; i < info.orders.length; i++) {
+      results.push(
+        await Promise.all([
+          im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i]),
+          im.contracts.erc721ListingMarketplace.getListing(info.orders[i]),
+          im.contracts.erc721OrderMarketplace.getOrder(info.orders[i]),
+        ])
+      );
     }
-    console.log('result is',results);
+    console.log("result is", results);
     // // ;
-    let order_listings = []
-    for(let i = 0; i < results.length; i++)
-    {
-      for(let j = 0; j< results[i].length; j++)
-      {
-        if(results[i][j] != null){
-          order_listings.push(results[i][j])
+    let order_listings = [];
+    for (let i = 0; i < results.length; i++) {
+      for (let j = 0; j < results[i].length; j++) {
+        if (results[i][j] != null) {
+          order_listings.push(results[i][j]);
         }
       }
     }
-    console.log(order_listings, 'list of all the nfts')
+    console.log(order_listings, "list of all the nfts");
 
-    let order_listing_image = null
-    let all_nft_data = []
-    for(let order_listing = 0; order_listing < order_listings.length; order_listing++){
-        // console.log(order_listings[order_listing],'order listing ');
-        // order_listing_image.push(order_listings[order_listing])
+    let order_listing_image = null;
+    let all_nft_data = [];
+    for (
+      let order_listing = 0;
+      order_listing < order_listings.length;
+      order_listing++
+    ) {
+      // console.log(order_listings[order_listing],'order listing ');
+      // order_listing_image.push(order_listings[order_listing])
 
-      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then(res => res.json());
+      order_listing_image = await fetch(
+        `${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`
+      ).then((res) => res.json());
       console.log(order_listing_image);
-      all_nft_data.push(Object.assign(order_listings[order_listing], {'tokenUri': order_listing_image}))
+      all_nft_data.push(
+        Object.assign(order_listings[order_listing], {
+          tokenUri: order_listing_image,
+        })
+      );
     }
-    console.log(all_nft_data,'data after push')
-    this.cards = all_nft_data
-    this.exploreLoader = true
+    console.log(all_nft_data, "data after push");
+    this.cards = all_nft_data;
+    this.exploreLoader = true;
+    this.trendingLoader = true;
+    this.userLoader = true;
     // loader.hide();
     // let ddf =  await fetch(`${BACKEND_URL}/metadata/${order_listings[46].tokenId}.json`).then(res => res.json());
     // console.log(ddf);
@@ -259,66 +309,53 @@ export default {
     // const nfts_data = await fetch(`${BACKEND_URL}/nft/trending`).then(res => res.json());
     // console.log("info is",nfts_data.nfts.length, nfts_data.nfts);
 
-
     // let all_nft = [];
     // for(var j=nfts_data.nfts.length-1; j<nfts_data.nfts.length; j++){
     //     all_nft.push(await fetch(`${BACKEND_URL}/metadata/${nfts_data.nfts[j]}.json`).then(res => res.json()));
-     
+
     // }
     // this.cards = all_nft;
     // console.log(this.cards, 'al the nfts are here');
 
-    
     //get all the users
-  try{
-    const users_data = await fetch(`${BACKEND_URL}/user/top-users`).then(res => res.json());
-    console.log("users is",users_data);
-    let k = 0
-    for( i in users_data){
-      console.log(users_data[i][k], ' users');
-      k++;
+    try {
+      const users_data = await fetch(`${BACKEND_URL}/user/top-users`).then(
+        (res) => res.json()
+      );
+      console.log("users is", users_data);
+      let k = 0;
+      for (i in users_data) {
+        console.log(users_data[i][k], " users");
+        k++;
+      }
+      this.users = users_data;
+    } catch {
+      console.log("no user found");
     }
-    this.users = users_data
-  }
-  catch{
-      console.log('no user found')
-  }
-    
-    
-  //   // let all_users;
-  //   // for(var j=111; j<nfts_data.nfts.length; j++){
-  //   //     all_users += 
-     
-  //   // }
-  //   // // this.users = all_nft;
-  //   // console.log(this.cards, 'al the nfts are here');
 
+    //   // let all_users;
+    //   // for(var j=111; j<nfts_data.nfts.length; j++){
+    //   //     all_users +=
 
+    //   // }
+    //   // // this.users = all_nft;
+    //   // console.log(this.cards, 'al the nfts are here');
 
-  //   // }
-  //   // console.log('result is',results, results[1].tokenId, results[1].length);
-  //   // ;
-  //   // const feature_image = await fetch(`${BACKEND_URL}/metadata/${results[1].tokenId}.json`).then(res => res.json());
-  //   // this.feature_id = feature_image.image
-
-
-
+    //   // }
+    //   // console.log('result is',results, results[1].tokenId, results[1].length);
+    //   // ;
+    //   // const feature_image = await fetch(`${BACKEND_URL}/metadata/${results[1].tokenId}.json`).then(res => res.json());
+    //   // this.feature_id = feature_image.image
 
     try {
-      const {data} = await this.axios.get(`${this.$cms}/background`);
-      console.log(data, 'data');
+      const { data } = await this.axios.get(`${this.$cms}/background`);
+      console.log(data, "data");
       this.cssProps.backgroundImage = `url(${this.$cms}${data.file.url})`;
-
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-
-
   },
-
-
-
-}
+};
 </script>
 
 <style scoped>
@@ -333,7 +370,7 @@ section:last-child {
 .hero-section {
   width: 100%;
   /*background-image: url(http://localhost:1337/uploads/organizers_33657ce425.jpg);*/
-  background-image: url('~@/assets/images/hero-bg.jpg');
+  background-image: url("~@/assets/images/hero-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -494,7 +531,7 @@ section:last-child {
   align-items: center;
 }
 
-.home_featured_link .home_featSpan{
+.home_featured_link .home_featSpan {
   text-align: left;
   font-weight: bold;
 }
@@ -524,7 +561,6 @@ section:last-child {
   .collection-tag.view-all {
     padding: 0.75rem 1rem;
   }
-
 }
 
 @media screen and (min-width: 992px) {
@@ -579,5 +615,4 @@ section:last-child {
     margin: 1.5rem auto;
   }
 }
-
 </style>

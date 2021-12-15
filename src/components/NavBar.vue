@@ -449,6 +449,9 @@
     width: 50px;
     height: 50px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-avatar img {
