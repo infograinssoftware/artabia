@@ -1,4 +1,5 @@
 <template>
+<a href="javascript:;" class="nft-cardClickable">
   <b-card
     v-if="card"
     :img-src="card.tokenUri.image"
@@ -45,6 +46,7 @@
       </div>
     </template>
   </b-card>
+</a>
 </template>
 
 <script>
@@ -182,5 +184,9 @@ export default {
   color: #ddd;
   border: 0;
   padding: 0;
+}
+.nft-cardClickable:hover{
+  text-decoration: none;
+  color: inherit;
 }
 </style>

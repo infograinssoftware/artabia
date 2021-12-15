@@ -25,5 +25,7 @@
 </script>
 
 <style scoped>
-
+    .artabia-dark-color-text{
+        color: #98694b;
+    }
 </style>
