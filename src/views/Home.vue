@@ -133,11 +133,11 @@
                      leftSideTextBottom="0,1 ETH"
                      leftSideTextTop="Current bid"/>
         </div> -->
-        <nft-cards v-for="card in cards"
+          <nft-cards  v-for="card in cards"
                      :key="card.tokenId"
                      :card="card"
                      leftSideTextBottom = "0.1 ETH"
-                     leftSideTextTop="Current Price"/>
+                     leftSideTextTop="Current Price" />  
         </div>
        
       </div>
@@ -169,6 +169,7 @@
 import ItemCard from '@/components/ItemCard'
 import ProfileCard from '@/components/ProfileCard'
 import NftCards from '@/components/NftCards'
+
 // import NftCards from '../components/nftCards.vue'
 
 
@@ -186,6 +187,9 @@ export default {
       users: null,
       feature_id : null,
       top_nft : null,
+      trendingLoader : false,
+      exploreLoader : false,
+      userLoader : false,
       leftSideTextB : "0.1 ETH",
       leftSideTextT: null,
       cssProps: {
@@ -194,6 +198,11 @@ export default {
     }
   },
   async created() {
+    // const loader = this.$loading.show({
+    //     container: NftCards,
+    //     canCancel: false,
+    //   });
+    
     this.leftSideTextB = "0.1 ETH"
     // console.log(users)
     // this.cards = cards
@@ -241,7 +250,8 @@ export default {
     }
     console.log(all_nft_data,'data after push')
     this.cards = all_nft_data
-
+    this.exploreLoader = true
+    // loader.hide();
     // let ddf =  await fetch(`${BACKEND_URL}/metadata/${order_listings[46].tokenId}.json`).then(res => res.json());
     // console.log(ddf);
 
