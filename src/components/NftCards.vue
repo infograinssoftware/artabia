@@ -16,15 +16,16 @@
       <div class="footer-slot">
         <div class="price price flex px-2 py-2.5 items-center">
           <span class="flex flex-col text-left">
-            <span :class="leftSideTextTopClass">{{leftSideTextTop}} </span>
+            <span :class="leftSideTextTopClass">Current {{card.price ? 'Price': 'Bid'}} </span>
             <span v-if="card.price">{{ethPrice(card.price)}}</span>
             <span v-if="card.offer">{{ethPrice(card.offer)}}</span>
+
           </span>
 
-          <span v-if="card.offer" class="flex flex-col text-right">
+          <span v-if="card.endsAt" class="flex flex-col text-right">
             <span> Ending in</span>
             <span>
-              <vue-countdown :time="`${biddingTime(parseInt(card.offerPlacedAt))}`" v-slot="{ days, hours, minutes, seconds }">
+              <vue-countdown :time="`${biddingTime(parseInt(card.endsAt))}`" v-slot="{ days, hours, minutes, seconds }">
                 {{ days }} d, {{ hours }} h, {{ minutes }} m, {{ seconds }} s
               </vue-countdown>  
             </span>            
@@ -106,6 +107,7 @@ export default {
       return etherValue
     },
     biddingTime(endTime){
+      console.log(endTime, 'endtime is here')
       return endTime - Date.now()
     }
   },

@@ -83,7 +83,9 @@
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
           />
-          <Spinner v-if="!trendingLoader" name="ripple" color="#8c65d3" />
+          <div style="display:flex; justify-content:center; align-item: center;">
+            <Spinner v-if="!trendingLoader" name="ripple" color="#8c65d3" />
+          </div>
         </div>
       </div>
     </section>
@@ -99,6 +101,7 @@
             <span class="collection-title">Explore</span>
           </div>
           <div class="collection-tags">
+              <a class="exploreAllNft_href" href="/explore">
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/tag-icon.png')"
@@ -107,6 +110,7 @@
               />
               <span>All NFTs</span>
             </div>
+              </a>
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/tag-icon.png')"
@@ -163,7 +167,9 @@
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
           />
+          <div style="display:flex; justify-content:center; align-item: center;">
           <Spinner v-if="!exploreLoader" name="ripple" color="#8c65d3" />
+          </div>
         </div>
       </div>
     </section>
@@ -188,11 +194,13 @@
           </div>
         </div>
         <div>
+          <div style="display:flex; justify-content:center; align-item: center;">
           <Spinner v-if="!userLoader" name="ripple" color="#8c65d3" />
           <div v-for="user in users" :key="user.id">
             <div class="collection-body">
               <profile-card v-for="u in user" :key="u.name" :user="u" />
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -614,5 +622,11 @@ section:last-child {
     max-width: 1150px;
     margin: 1.5rem auto;
   }
+}
+
+.exploreAllNft_href{
+  text-decoration: none;
+  color: inherit;
+  margin-right: 15px;
 }
 </style>

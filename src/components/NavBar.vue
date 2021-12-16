@@ -42,6 +42,11 @@
                         <option value="el">el</option>
                     </select>
                 </div>
+                <div class="buttons">
+                    <router-link to="/create-select" class="nav-link">
+                        Create
+                    </router-link>
+                </div>
                 <div class="buttons" v-if="user == null" @click="loginUser">
                     <router-link to="/"  class="nav-link">
                         Login
@@ -50,11 +55,6 @@
                 <div class="buttons" v-if="user" @click="logoutUser">
                     <router-link to="/" class="nav-link">
                         Logout
-                    </router-link>
-                </div>
-                <div class="buttons" v-if="user">
-                    <router-link to="/create-select" class="nav-link">
-                        Create
                     </router-link>
                 </div>
                 <div class="wallet_drop_grp" v-if="user">
