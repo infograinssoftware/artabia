@@ -86,7 +86,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 1rem;
 }
 
@@ -107,13 +107,15 @@
 }
 
 .result-avatar {
-    max-width: 50px;
-    max-height: 50px;
+    width: 25px;
+    height: 25px;
 }
 
 .result-avatar img {
     width: 100%;
+    height: 100%;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .result-info-container {
