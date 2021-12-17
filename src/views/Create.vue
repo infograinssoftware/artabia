@@ -216,8 +216,8 @@
             @input="setTimestamp($event.target.value)"
             v-if="limited.active"
             type="datetime-local"
-            min="2021-12-07T03:00"
-            max="2021-12-14T00:00"
+            :min="mindate"
+            :max="maxdate"
             class="
               focus:outline-none
               border
@@ -298,6 +298,9 @@
         <!--        <p v-if="!imageUrl" class="font-bold text- 3xl">Preview</p>-->
       </div>
     </aside>
+    <!-- <sweet-modal icon="success" v-if="mintSuccess">
+	        Minted Successfully !  
+    </sweet-modal> -->
   </section>
 </template>
 
@@ -307,16 +310,17 @@ import UploadImage from "@/components/UploadImage";
 import Box from "@/components/Box";
 import TextInput from "@/components/TextInput";
 import { ModelGltf } from "/src/assets/plugin/vue-model";
+// import SweetModal from ""
 // import Moralis from 'moralis/types';
-
+import Swal from "sweetalert2";
 
 export default {
   name: "Create",
-  components: { TextInput, Box, UploadImage, Breadcrumb, ModelGltf},
+  components: { TextInput, Box, UploadImage, Breadcrumb, ModelGltf, Swal },
   data() {
     return {
-      mindate : null, 
-      maxdate : null,
+      mindate: null,
+      maxdate: null,
       fixed: {
         path: "/img/fixed-price.png",
         name: "Fixed price",
@@ -346,6 +350,7 @@ export default {
       endsAt: "",
       price: "",
       chain: "Ethereum",
+      mintSuccess: true,
       chainSelect: this.chain == "Ethereum" ? "ETH" : "BSC",
       ext: null,
       extensions: {
@@ -355,16 +360,18 @@ export default {
         model3d: ["glb", "gltf"],
       },
       amountToList: "",
-      userBalance : 0.00,
-      user: null
+      userBalance: 0.0,
+      user: null,
     };
   },
 
   created() {
-    this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC"
+    this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC";
     this.type = this.$route.query.type;
     if (this.type !== "single" && this.type !== "multiple")
       this.$router.push("/");
+    this.addMonths(new Date(), 6);
+    this.addHour(new Date(), 1);
   },
 
   computed: {
@@ -390,35 +397,62 @@ export default {
   },
 
   methods: {
-    async loginUser(){
-        let userAddress = await im.connect('rinkeby')
-        let userdata = await window.login({"im": im, "account" : userAddress})
-        if(userdata.code){
-          alert(userdata.message,'Please sign transaction before mint')
-        }else{
-          this.user = userdata
-          console.log(this.user, 'this is the userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ')
-          userdata = JSON.stringify(userdata);
-          console.log(userdata, 'after login')
-          localStorage.setItem('userdata',  userdata);
-          let bbl = await im.web3.eth.getBalance(userAddress);
-          console.log(bbl, 'bbl');
-          this.userBalance = await im.web3.utils.fromWei(bbl, 'ether').slice(0,6);
-          // this.submit();
-          window.location.reload();
+    showSuccss() {
+      let timerInterval;
+      Swal.fire({
+        title: "Minted Successfully",
+        html: "closing in <b></b> milliseconds.",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const b = Swal.getHtmlContainer().querySelector("b");
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft();
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log("I was closed by the timer");
         }
-      },
-    selectedChain(){
-      this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC"
-      console.log(this.chain, this.chainSelect, 'this is the chain');
+      });
+    },
+    async loginUser() {
+      let userAddress = await im.connect("rinkeby");
+      let userdata = await window.login({ im: im, account: userAddress });
+      if (userdata.code) {
+        alert(userdata.message, "Please sign transaction before mint");
+      } else {
+        this.user = userdata;
+        console.log(
+          this.user,
+          "this is the userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr "
+        );
+        userdata = JSON.stringify(userdata);
+        console.log(userdata, "after login");
+        localStorage.setItem("userdata", userdata);
+        let bbl = await im.web3.eth.getBalance(userAddress);
+        console.log(bbl, "bbl");
+        this.userBalance = await im.web3.utils
+          .fromWei(bbl, "ether")
+          .slice(0, 6);
+        // this.submit();
+        window.location.reload();
+      }
+    },
+    selectedChain() {
+      this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC";
+      console.log(this.chain, this.chainSelect, "this is the chain");
     },
     setTimestamp(date) {
-      this.addMonths(new Date(),  1)
-      this.addHour(new Date(),  6)
-      this.endsAt = date
+      this.endsAt = date;
       const datum = Date.parse(date);
-      console.log(datum, 'fdfd')
-      this.backendDate = datum / 1000
+      console.log(datum, "fdfd");
+      this.backendDate = datum / 1000;
       return datum / 1000;
     },
 
@@ -447,10 +481,10 @@ export default {
       this.limited.active = false;
       this.open.active = false;
       this[value].active = true;
-      console.log(this[value].active, this.limited.active, 'good')
+      console.log(this[value].active, this.limited.active, "good");
     },
     validate() {
-      console.log('submittion')
+      console.log("submittion");
       if (
         this.name &&
         (this.type == "single" || this.amount) &&
@@ -464,33 +498,41 @@ export default {
           ? this.fixed.active || this.limited.active || this.open.active
           : true)
       ) {
-        let userData = JSON.parse(localStorage.getItem('userdata'))
-        console.log(userData,'user data is given here');
-        if (userData == null){
-            console.log('user not logged-in on site');
-            this.loginUser();
-        }
-        else{
-          console.log('user is logged-in on site');
+        let userData = JSON.parse(localStorage.getItem("userdata"));
+        console.log(userData, "user data is given here");
+        if (userData == null) {
+          console.log("user not logged-in on site");
+          this.loginUser();
+        } else {
+          console.log("user is logged-in on site");
           this.submit();
-        }      
+        }
       }
     },
     addMonths(date1, months) {
-      date1.setMonth(date1.getMonth()+1 + months);
-      console.log(date1, 'date1 after adding months');
-       const  str1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDay()}T${date1.getHours()}:${date1.getMinutes()}`
+      date1.setMonth(date1.getMonth() + months);
+      console.log(date1, "date1 after adding months");
+      const str1 = `${date1.getFullYear()}-${(
+        "0" +
+        (date1.getMonth() + 1)
+      ).slice(-2)}-${("0" + date1.getDate()).slice(-2)}T${(
+        "0" + date1.getHours()
+      ).slice(-2)}:${("0" + date1.getMinutes()).slice(-2)}`;
       console.log(str1);
       this.maxdate = str1;
     },
     addHour(date, hrs) {
       date.setHours(date.getHours() + hrs);
-      console.log(date, 'date after adding hr');
-      const  str2 = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}T${date.getHours()}:${date.getMinutes()}`
+      console.log(date, "date after adding hr");
+      const str2 = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(
+        -2
+      )}-${("0" + date.getDate()).slice(-2)}T${("0" + date.getHours()).slice(
+        -2
+      )}:${("0" + date.getMinutes()).slice(-2)}`;
       console.log(str2);
       this.mindate = str2;
     },
-     
+
     async submit() {
       const loader = this.$loading.show({
         container: null,
@@ -502,7 +544,7 @@ export default {
       );
 
       const id = await im.web3.utils.randomHex(32);
-      console.log('this is the id ', id, BACKEND_URL);
+      console.log("this is the id ", id, BACKEND_URL);
       const dd = await this.axios.post(`${BACKEND_URL}/nft/create`, {
         id,
         chain: this.chain,
@@ -512,13 +554,13 @@ export default {
         unlockable: this.isUnlockable ? this.unlockable : "",
         imageType: this.image.type,
       });
-      console.log('this is the id ', id, BACKEND_URL, dd);
+      console.log("this is the id ", id, BACKEND_URL, dd);
       console.log(this.image.type, "image type1", dd);
-       console.log(this.image.type, "image type2");
+      console.log(this.image.type, "image type2");
       const formData = new FormData();
 
-      formData.append("image", this.image)
-      
+      formData.append("image", this.image);
+
       await this.axios.post(`${BACKEND_URL}/nft/create_image/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -535,23 +577,23 @@ export default {
       // console.log(ipfs_metadata,' ipfs metadata is here')
 
       const object = {
-            description : this.description,
-            name : this.name,
-            external_url : `${BACKEND_URL}/image/${id}.${this.src.name.split(".").pop()}`,
-            image : `${BACKEND_URL}/image/${id}.${this.src.name.split(".").pop()}`
-          };
+        description: this.description,
+        name: this.name,
+        external_url: `${BACKEND_URL}/image/${id}.${this.src.name
+          .split(".")
+          .pop()}`,
+        image: `${BACKEND_URL}/image/${id}.${this.src.name.split(".").pop()}`,
+      };
 
-          
-          // const imageNFT =  new Moralis.File(this.image.name, this.image)
-          // await imageNFT.saveIPFS();
-          // console.log(imageNFT.hash(), 'sdfsd', imageNFT.ipfs());
+      // const imageNFT =  new Moralis.File(this.image.name, this.image)
+      // await imageNFT.saveIPFS();
+      // console.log(imageNFT.hash(), 'sdfsd', imageNFT.ipfs());
 
+      // const file = new Moralis.File("file.json", {
+      //   base64: btoa(JSON.stringify(object)),
+      // });
+      // await file.saveIPFS({useMasterKey:true});
 
-          // const file = new Moralis.File("file.json", {
-          //   base64: btoa(JSON.stringify(object)),
-          // });
-          // await file.saveIPFS({useMasterKey:true});
-         
       const royalty = parseInt(this.royalty) || 0;
 
       let orderId = "";
@@ -626,7 +668,7 @@ export default {
         }
 
         loader.hide();
-
+        this.showSuccss();
         if (orderId) {
           await this.axios.post(`${BACKEND_URL}/order/create`, {
             chain: this.chain,

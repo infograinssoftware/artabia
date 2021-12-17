@@ -55,13 +55,19 @@
           </div>
         </div>
       </div>
-      <div class="collection-body">
+      <div class="collection-body" v-if="noNFT">
+        <h3>No NFTs are available</h3>
+      </div>
+      <div class="collection-body" v-if="cards">
         <nft-cards v-for="card in cards"
                      :key="card.tokenId"
                      :card="card"
                      leftSideTextBottom = "0.1 ETH"
                      leftSideTextTop="Current Price"/>
       </div>
+          <div style="display:flex; justify-content:center; align-item: center;" v-if="exploreLoader">
+            <Spinner v-if="exploreLoader" name="ripple" color="#8c65d3" />
+          </div>
     </div>
   </section>
 
@@ -77,16 +83,19 @@ import users from '@/UserProfiles.json'
 import ItemCard from '@/components/ItemCard'
 import ProfileCard from '@/components/ProfileCard'
 import NftCards from '@/components/NftCards'
+import Spinner from "vue-spinkit";
 
 export default {
   name: 'Explore',
   components: {
-    ItemCard, ProfileCard, NftCards
+    ItemCard, ProfileCard, NftCards, Spinner
   },
   data() {
     return {
       cards: null,
       users: null,
+      noNFT: false,
+      exploreLoader: true,
       cssProps: {
         backgroundImage: ''
 
@@ -137,8 +146,15 @@ export default {
       all_nft_data.push(Object.assign(order_listings[order_listing], {'tokenUri': order_listing_image}))
     }
     console.log(all_nft_data,'data after push')
-    this.cards = all_nft_data
 
+    if(all_nft_data.length > 0){
+      this.noNFT = false
+      this.cards = all_nft_data
+    }
+    else{
+      this.noNFT = true
+    }
+    this.exploreLoader = false
   },
 
 }

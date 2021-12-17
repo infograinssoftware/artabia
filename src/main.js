@@ -8,6 +8,7 @@ import VueI18n from 'vue-i18n'
 import PortalVue from 'portal-vue'
 
 
+
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faArrowRight, faGlobe, faFileAlt, faEnvelope, faUser, faAt, faUpload} from '@fortawesome/free-solid-svg-icons'
 import {

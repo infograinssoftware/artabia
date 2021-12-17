@@ -30,7 +30,7 @@
             <div class="bio">{{ user.bio }}</div>
         </div>
         <div class="links-section">
-            <div class="section-title">Links</div>
+            <div class="section-title" >Links</div>
             <div v-if="user.social.website" class="social-link">
                 <font-awesome-icon :icon="['fas', 'globe']" /> <span>{{ user.social.website }}</span>
             </div>
@@ -39,6 +39,18 @@
             </div>
             <div v-if="user.social.facebook" class="social-link">
                 <font-awesome-icon :icon="['fab', 'facebook']" /> <span>{{ user.social.facebook }}</span>
+            </div>
+            <div v-if="user.social.facebook" class="social-link">
+                <font-awesome-icon :icon="['fab', 'snapchat-ghost']" /> <span>{{ user.social.snapchat }}</span>
+            </div>
+            <div v-if="user.social.facebook" class="social-link">
+                <font-awesome-icon :icon="['fab', 'tiktok']" /> <span>{{ user.social.tiktok }}</span>
+            </div>
+            <div v-if="user.social.facebook" class="social-link">
+                <font-awesome-icon :icon="['fab', 'twitch']" /> <span>{{ user.social.twitch }}</span>
+            </div>
+            <div v-if="user.social.facebook" class="social-link">
+                <font-awesome-icon :icon="['fab', 'youtube']" /> <span>{{ user.social.youtube }}</span>
             </div>
         </div>
         <div class="joined-section">
@@ -88,7 +100,10 @@
             },
             formatedDate() {
                 if (this.user.createdAt) {
-                    return moment(parseInt(this.user.createdAt)).format('MMM YYYY')
+                    let date = new Date(this.user.createdAt);
+                    let shortMonth = date.toLocaleString('en-us', { month: 'short' }); /* Jun */
+
+                    return shortMonth + ' ' + date.getFullYear()
                 }
                 return ''
             }

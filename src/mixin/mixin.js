@@ -15,6 +15,8 @@ const Web3 = require('web3')
 
 const Moralis = require('moralis')
 
+
+
 export default {
 
   data() {

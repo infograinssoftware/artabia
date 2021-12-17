@@ -223,9 +223,9 @@
 <script>
 import userProfile from "@/UserProfile.json";
 import ImageUpload from "@/components/ImageUpload";
-
+import Swal from "sweetalert2";
 export default {
-  components: { ImageUpload },
+  components: { ImageUpload,  Swal},
   data() {
     return {
       user: {
@@ -259,6 +259,30 @@ export default {
     this.user.profileImage = decodedString
   },
   methods: {
+    showSuccss() {
+      let timerInterval;
+      Swal.fire({
+        title: "Profile Updated Successfully",
+        html: "closing in <b></b> milliseconds.",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const b = Swal.getHtmlContainer().querySelector("b");
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft();
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log("I was closed by the timer");
+        }
+      });
+    },
     async saveProfile() {
       console.log(
         "save profile called",
@@ -301,6 +325,7 @@ export default {
         }
       );
     if(updatedUser.status == 200){
+      this.showSuccss()
       let Saveduser =  JSON.parse(localStorage.getItem("userdata"))
       Saveduser.user.name =  this.user.name
       Saveduser.user.username =  this.user.username

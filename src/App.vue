@@ -19,6 +19,7 @@ import FooterBar from '@/components/FooterBar'
 import mixin from "./mixin/mixin";
 
 
+
 export default {
   components: {
     NavBar, FooterBar, Spinner
