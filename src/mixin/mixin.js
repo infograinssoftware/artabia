@@ -68,35 +68,28 @@ export default {
     window.login = async ({ web3, account}) => {
       let message = "Welcome to Artabia!\n\nPlease sign this message to log in"
       let hash = im.web3.utils.sha3(message)
-      let signature = await im.web3.eth.personal.sign(hash, account)
-      console.log(signature, 'signature is here')
-      let user_data = await this.axios.post(`${BACKEND_URL}/user/connect`,{"id" : account, "signature" : signature}).then((res) => res.data);
-      return user_data
+      try{
+
+        let signature = await im.web3.eth.personal.sign(hash, account)
+        console.log(signature, 'signature is here')
+        let user_data = await this.axios.post(`${BACKEND_URL}/user/connect`,{"id" : account, "signature" : signature}).then((res) => res.data);
+        return user_data
+      }
+      catch(e){
+        console.log(e);
+        return e;
+      }
     }
 
-
-
-
-
-    Moralis.initialize("cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM");
-
-    Moralis.serverURL = 'https://rpzgvjogtika.grandmoralis.com:2053/server'
-
-    if(!localStorage.getItem('Parse/cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM/currentUser')){
-      Moralis.authenticate().then(function (user) {
-        console.log(user.get('ethAddress'))
-      })
-    }
     
+    // async function getMoraliNFT(){
 
-    async function getMoraliNFT(){
-
-      const options = { chain: 'rinkeby', address: '0xf7aeb79dc38dfff49978c2843710e6f100b082d5' };
-      const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
-      console.log(polygonNFTs, ' MORALIS NFTs are here');
-      window.moralisnft = polygonNFTs
-    }
-    getMoraliNFT()
+    //   const options = { chain: 'rinkeby', address: '0xf7aeb79dc38dfff49978c2843710e6f100b082d5' };
+    //   const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
+    //   console.log(polygonNFTs, ' MORALIS NFTs are here');
+    //   window.moralisnft = polygonNFTs
+    // }
+    // getMoraliNFT()
 
     window.Moralis = Moralis
 

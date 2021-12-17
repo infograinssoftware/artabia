@@ -88,7 +88,7 @@
           </li>
         </ul>
 
-        <div class="flex-1 sm:pl-4 lg:pl-5">
+        <div class="flex-1 sm:pl-4 lg:pl-5" v-if="history.length !== 0">
           <ul>
             <li class="font-bold text-3xl">History</li>
             <li
@@ -320,9 +320,13 @@ export default {
     } else if(results[3]) {
       this.limited = this.single = true
       this.contract = im.contracts.erc721AuctionMarketplace
+      // this.history = await this.contract.getListingOffers(orderId).then(history => history.reverse())
+      console.log(this.contract, 'find the history0')
     } else if(results[4]) {
       this.open = this.single = true
       this.contract = im.contracts.erc721ListingMarketplace
+      console.log(this.contract, 'find the history')
+      this.history = await this.contract.getListingOffers(orderId).then(history => history.reverse())
     } else if(results[5]) {
       this.fixed = this.single = true
       this.contract = im.contracts.erc721OrderMarketplace

@@ -67,7 +67,7 @@
                 <div class="profile-nav-container" v-if="user">
                     <div class="profile-avatar" @click="toggleProfileMenu">
                         <router-link to="/profile">
-                            <img  :src="user.user.profileImage? user.user.profileImage :require(`@/assets/images/Default_Profile_Picture.png`)" alt="avatar">
+                            <img :src="require(`@/assets/images/Default_Profile_Picture.png`)" alt="avatar">
                         </router-link>
                     </div>
                     <!-- <transition name="fade">
@@ -227,7 +227,6 @@
                 let bbl = await im.web3.eth.getBalance(userAddress);
                 console.log(bbl, 'bbl');
                 this.userBalance = im.web3.utils.fromWei(bbl, 'ether').slice(0,6);
-
             },
             logoutUser(){
                 localStorage.removeItem('userdata')

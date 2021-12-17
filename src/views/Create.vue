@@ -64,8 +64,8 @@
               rounded-md
             "
           >
-            <option >Ethereum</option>
-            <option >Binance</option>
+            <option>Ethereum</option>
+            <option>Binance</option>
           </select>
         </div>
 
@@ -197,8 +197,8 @@
             v-if="fixed.active"
             :label="type === 'single' ? 'Price' : 'Price for batch'"
             v-model="price"
-            :placeholder=  "'0.00' + ' ' + this.chainSelect"
-            :name= this.chainSelect
+            :placeholder="'0.00' + ' ' + this.chainSelect"
+            :name="this.chainSelect"
           />
 
           <!-- <input
@@ -210,13 +210,15 @@
             
             
           /> -->
-          <input 
-           :value="endsAt"
-          label="Ends at"
-          @input="endsAt = setTimestamp($event.target.value)"
-          v-if="limited.active"
-          type="datetime-local" 
-          class="
+          <input
+            :value="endsAt"
+            label="Ends at"
+            @input="setTimestamp($event.target.value)"
+            v-if="limited.active"
+            type="datetime-local"
+            min="2021-12-07T03:00"
+            max="2021-12-14T00:00"
+            class="
               focus:outline-none
               border
               p-2
@@ -226,8 +228,8 @@
               sm:text-sm
               border-gray-300
               rounded-md
-            ">
-
+            "
+          />
 
           <text-input
             v-if="type === 'multiple' && putOnMarketplace"
@@ -307,11 +309,14 @@ import TextInput from "@/components/TextInput";
 import { ModelGltf } from "/src/assets/plugin/vue-model";
 // import Moralis from 'moralis/types';
 
+
 export default {
   name: "Create",
-  components: { TextInput, Box, UploadImage, Breadcrumb, ModelGltf },
+  components: { TextInput, Box, UploadImage, Breadcrumb, ModelGltf},
   data() {
     return {
+      mindate : null, 
+      maxdate : null,
       fixed: {
         path: "/img/fixed-price.png",
         name: "Fixed price",
@@ -350,6 +355,8 @@ export default {
         model3d: ["glb", "gltf"],
       },
       amountToList: "",
+      userBalance : 0.00,
+      user: null
     };
   },
 
@@ -383,14 +390,35 @@ export default {
   },
 
   methods: {
+    async loginUser(){
+        let userAddress = await im.connect('rinkeby')
+        let userdata = await window.login({"im": im, "account" : userAddress})
+        if(userdata.code){
+          alert(userdata.message,'Please sign transaction before mint')
+        }else{
+          this.user = userdata
+          console.log(this.user, 'this is the userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ')
+          userdata = JSON.stringify(userdata);
+          console.log(userdata, 'after login')
+          localStorage.setItem('userdata',  userdata);
+          let bbl = await im.web3.eth.getBalance(userAddress);
+          console.log(bbl, 'bbl');
+          this.userBalance = await im.web3.utils.fromWei(bbl, 'ether').slice(0,6);
+          // this.submit();
+          window.location.reload();
+        }
+      },
     selectedChain(){
       this.chainSelect = this.chain == "Ethereum" ? "ETH" : "BSC"
       console.log(this.chain, this.chainSelect, 'this is the chain');
     },
     setTimestamp(date) {
+      this.addMonths(new Date(),  1)
+      this.addHour(new Date(),  6)
       this.endsAt = date
       const datum = Date.parse(date);
       console.log(datum, 'fdfd')
+      this.backendDate = datum / 1000
       return datum / 1000;
     },
 
@@ -431,15 +459,38 @@ export default {
         this.description &&
         !!this.image.name &&
         (!this.fixed.active || this.price) &&
-        (!this.limited.active || '1639748520000') &&
+        (!this.limited.active || this.backendDate) &&
         (this.putOnMarketplace
           ? this.fixed.active || this.limited.active || this.open.active
           : true)
       ) {
-        
-        this.submit();
+        let userData = JSON.parse(localStorage.getItem('userdata'))
+        console.log(userData,'user data is given here');
+        if (userData == null){
+            console.log('user not logged-in on site');
+            this.loginUser();
+        }
+        else{
+          console.log('user is logged-in on site');
+          this.submit();
+        }      
       }
     },
+    addMonths(date1, months) {
+      date1.setMonth(date1.getMonth()+1 + months);
+      console.log(date1, 'date1 after adding months');
+       const  str1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDay()}T${date1.getHours()}:${date1.getMinutes()}`
+      console.log(str1);
+      this.maxdate = str1;
+    },
+    addHour(date, hrs) {
+      date.setHours(date.getHours() + hrs);
+      console.log(date, 'date after adding hr');
+      const  str2 = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}T${date.getHours()}:${date.getMinutes()}`
+      console.log(str2);
+      this.mindate = str2;
+    },
+     
     async submit() {
       const loader = this.$loading.show({
         container: null,
@@ -531,7 +582,7 @@ export default {
               await window.im.contracts.artabiaErc721.mintAndCreateAuction(
                 id,
                 royalty,
-                "1639748520000"
+                this.backendDate
               );
             contract = "erc721AuctionMarketplace";
           }
@@ -568,7 +619,7 @@ export default {
                 this.amount,
                 this.amountToList,
                 royalty,
-                this.endsAt
+                this.backendDate
               );
             contract = "erc1155AuctionMarketplace";
           }

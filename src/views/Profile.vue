@@ -82,6 +82,15 @@ export default {
   // },
   async created() {
 
+    Moralis.initialize("cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM");
+
+    Moralis.serverURL = 'https://rpzgvjogtika.grandmoralis.com:2053/server'
+
+    if(!localStorage.getItem('Parse/cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM/currentUser')){
+      Moralis.authenticate().then(function (user) {
+        console.log(user.get('ethAddress'))
+      })
+    }
     // this.cards = cards
     // this.cards = cards.slice(0, 6),
     // const base64String2 = await btoa(String.fromCharCode(...new Uint8Array(JSON.parse(localStorage.getItem('userdata')).user.coverImage.data)));
@@ -94,7 +103,7 @@ export default {
     // console.log(this.im.account, 'account nft')
       const options = { 
         chain: 'rinkeby',
-        address: '0X79319A973BE6C6F0CBAD2206EA4F6573A9ECF223'
+        address: '0xf7aeb79dc38dfff49978c2843710e6f100b082d5'
       };
       console.log('mmmmmmmmmmmmoooooooorrr')
         const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(options);

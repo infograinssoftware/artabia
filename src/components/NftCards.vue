@@ -107,8 +107,9 @@ export default {
       return etherValue
     },
     biddingTime(endTime){
-      console.log(endTime, 'endtime is here')
-      return endTime - Date.now()
+      console.log(typeof(endTime),typeof( Date.now()) , 'endtime is here')
+      // console.log(endTime - Date.now()/1000) / 1000, 'difference date');
+      return endTime*1000 - Date.now();
     }
   },
 }
