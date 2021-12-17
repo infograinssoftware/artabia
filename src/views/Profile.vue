@@ -2,7 +2,7 @@
   <div>
     <section class="cover_pfl">
       <div class="cover_bg_box">
-        <img :src="userCoverImg" class="cover_bg_img">
+        <img  :src="userCoverImg" class="cover_bg_img">
       </div>      
        <!-- <img class="cover_bg_img" :src="userCoverImg" />
        <img :src="image" class="cover_bg_img" /> -->
@@ -34,52 +34,20 @@
 import ProfileSidebar from '@/components/ProfileSidebar'
 import ItemCard from '@/components/ItemCard'
 // import cards from '@/cards.json'
+import Swal from "sweetalert2";
 
 export default {
   
-  components: {ProfileSidebar, ItemCard},
+  components: {ProfileSidebar, ItemCard, Swal},
   props:['cards'],
   data() {
     return {
       cards: null,
       userCoverImg: null,
+      user : null
       // getFreeVideo : getFreeVideo()
     }
   },
-//   watch: {
-//   getFreeVideo() {
-//     this.cards = this.getFreeVideo
-//   }
-// },
-  // async beforeMount() {
-  //   this.cards = null
-
-  //   // const option = { chain: "rinkeby", address: "0xf7aeb79dc38dfff49978c2843710e6f100b082d5"};
-  //   //   const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(option);
-  //   //   console.log(transfersNFT, ' NFT transfer');
-  //   //   const options = { 
-  //   //       chain: 'rinkeby', 
-  //   //       address: '0xf7aeb79dc38dfff49978c2843710e6f100b082d5'
-  //   //   };
-  //   //   const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);;
-  //   //   console.log(polygonNFTs, 'sdfosadfiosiodf');
-  //   //   // console.log(transfersNFT);
-  //   //   let content = []
-  //   //    polygonNFTs.result.forEach( e => {
-  //   //             let url = e.token_uri;
-  //   //             fetch(url)
-  //   //             .then(response => response.json())
-  //   //             .then(data => {
-                   
-  //   //                 // let currentDiv = document.getElementById("content");
-  //   //                 content.push(data.image)
-                    
-  //   //             })
-  //   //         })
-  //   //     this.cards = content
-  //   //     console.log(this.cards, 'cards')
-    
-  // },
   async created() {
 
     Moralis.initialize("cUcIRelhTpcM5tvYAHiDuCEuNIpXeRGA56J4OfNM");
@@ -96,8 +64,10 @@ export default {
     // const base64String2 = await btoa(String.fromCharCode(...new Uint8Array(JSON.parse(localStorage.getItem('userdata')).user.coverImage.data)));
     // const decodedString2 = await atob(base64String2);
     // console.log(JSON.parse(localStorage.getItem('userdata')).user.coverImage.data, 'coverImage', decodedString2)
+    this.user =  JSON.parse(localStorage.getItem('userdata')).user
+    console.log(this.user, 'user is here')
     this.userCoverImg =  JSON.parse(localStorage.getItem('userdata')).user.coverImage
-
+console.log(this.userCoverImg, 'cover image is here')
     // console.log(this.userCoverImg,  this.cards , 'youtube')
     // const option = { chain: "rinkeby", address: "0xaa737df2b2c4175205af4644cb4e44d7b9cee5d4"};
     // console.log(this.im.account, 'account nft')
@@ -130,12 +100,35 @@ export default {
 data: {
     // active: false,
     image: null,
-    
+
 
   },
 
   methods: {
-
+    showSuccss() {
+      let timerInterval;
+      Swal.fire({
+        title: "Profile Updated Successfully",
+        html: "closing in <b></b> milliseconds.",
+        timer: 800,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const b = Swal.getHtmlContainer().querySelector("b");
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft();
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log("I was closed by the timer");
+        }
+      });
+    },
     onFileChange(e) {
 
       var files = e.target.files || e.dataTransfer.files;
@@ -145,18 +138,80 @@ data: {
       this.createImage(files[0]);
         
     },
-    createImage(file) {
-      var image = new Image();
-      var reader = new FileReader();
+    async createImage(file) {
+      var image = await new Image();
+      var reader = await new FileReader();
       console.log(file, 'checking fo the file');
       var vm = this;
 
       reader.onload = (e) => {
         vm.image = e.target.result;
-        this.image = e.target.result;
+        this.userCoverImg = e.target.result;
+        this.updateCoverImg(this.userCoverImg);
       }
       reader.readAsDataURL(file);
-    },  
+    }, 
+    async updateCoverImg(newImage){
+      // console.log(newImage, 'got the image in the state');
+      let profile_data = {
+        social: {
+          website: this.user.social.website,
+          discord: this.user.social.discord,
+          youtube: this.user.social.youtube,
+          facebook: this.user.social.facebook,
+          twitch: this.user.social.twitch,
+          tiktok: this.user.social.tiktok,
+          snapchat: this.user.social.snapchat,
+        },
+        id: JSON.parse(localStorage.getItem("userdata")).user.id,
+        name: this.user.name,
+        username: this.user.username,
+        email: this.user.email,
+        bio: this.user.bio,
+        lang: this.user.lang,
+        profileImage: this.user.profileImage,
+        coverImage: newImage,
+        createdAt: this.user.createdAt,
+      };
+      let updatedUser = await this.axios.post(
+        `${BACKEND_URL}/user/update`,
+        profile_data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${
+              JSON.parse(localStorage.getItem("userdata")).token
+            }`,
+          },
+        }
+      );
+    if(updatedUser.status == 200){
+      this.showSuccss()
+      let Saveduser =  JSON.parse(localStorage.getItem("userdata"))
+      Saveduser.user.name =  this.user.name
+      Saveduser.user.username =  this.user.username
+      Saveduser.user.email =  this.user.email
+      Saveduser.user.bio =  this.user.bio
+      Saveduser.user.lang =  this.user.lang
+      Saveduser.user.profileImage =  this.user.profileImage
+      Saveduser.user.coverImage =  this.image
+      Saveduser.user.createdAt =  this.user.createdAt
+      Saveduser.user.social.website =  this.user.social.website
+      Saveduser.user.social.discord =  this.user.social.discord
+      Saveduser.user.social.youtube =  this.user.social.youtube
+      Saveduser.user.social.facebook =  this.user.social.facebook
+      Saveduser.user.social.twitch =  this.user.social.twitch
+      Saveduser.user.social.tiktok =  this.user.social.tiktok
+      Saveduser.user.social.snapchat =  this.user.social.snapchat
+      Saveduser.token = Saveduser.token
+      Saveduser.message = `The user with id: ${Saveduser.user.id} was found.`
+      localStorage.setItem('userdata', JSON.stringify(Saveduser))
+      this.userCoverImg = this.image
+    }
+      console.log(this.userCoverImg, 'new cover image')
+      console.log("Saving profile...", updatedUser); 
+      this.$forceUpdate();
+    } 
     }
 
 }
