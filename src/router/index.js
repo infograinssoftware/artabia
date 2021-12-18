@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Create from '@/views/Create'
 import ViewOrder from '@/views/ViewOrder'
 import CreateSelect from '@/views/Create-select'
+import ViewUserProfile from "../views/ViewUserProfile";
 import Contact from "../views/Contact";
 import Explore from "../views/Explore";
 import Terms from "../views/Terms";
@@ -76,6 +77,12 @@ const routes = [
     path: '/explore',
     name: 'Explore',
     component: Explore,
+    props: true,
+  },
+  {
+    path: '/view-user/:id',
+    name: 'ViewUserProfile',
+    component: ViewUserProfile,
     props: true,
   },
 ]

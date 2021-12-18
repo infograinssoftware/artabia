@@ -1,4 +1,5 @@
 <template>
+    <a :href="`/view-user/${user.id}`">
     <b-card
         v-if="user"
         :img-src="user.coverImage? user.coverImage : defaultImg"
@@ -27,6 +28,7 @@
             </div>
         </template>
     </b-card>
+    </a>
 </template>
 
 <script>
