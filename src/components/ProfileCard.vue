@@ -21,7 +21,7 @@
                     </span>
                     Followers
                 </div>
-                <div class="follow-btn">
+                <div class="follow-btn" @click="followUnfollow(user.id)">
                     Unfollow
                 </div>
             </div>
@@ -47,6 +47,7 @@
         computed: {
             formatedDate() {
                 if (this.user.createdDate) {
+                    console.log(this.user.createdDate, 'this is the date after the creations of user')
                     return moment(this.card.user.createdDate).format('MMM Do, YYYY')
                 }
                 return ''
@@ -56,6 +57,10 @@
             shortenAddress(ethAddress) {
                 console.log(ethAddress, 'user address')
                 return ethAddress.substring(0, 6) + '...' + ethAddress.substring(ethAddress.length - 4)
+            },
+            followUnfollow(id){
+                // this.axios.post(`https://artabia.com:3001/user/follow`, {})
+                console.log(id, 'id is here')
             }
     }   }
 </script>
