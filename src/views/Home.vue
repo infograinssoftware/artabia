@@ -44,30 +44,36 @@
           />
           <span class="collection-title">Trending</span>
           <div class="collection-tags">
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/hourglass-icon.png')"
-                alt="timed auctions icon"
-                class="tag-avatar"
-              />
-              <span><button id="Timed-click" v-on:click="myFilter('Timed')" class="btn">Timed Auctions</button></span>
-            </div>
+            <button id="Timed-click" v-on:click="myFilter('Timed')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/icons/hourglass-icon.png')"
+                  alt="timed auctions icon"
+                  class="tag-avatar"
+                />
+                <span>Timed Auctions</span>
+              </div>
+            </button>
+            <button v-on:click="myFilter('Open_bids')" class="btn">
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/infinity-icon.png')"
                 alt="open for bids icon"
                 class="tag-avatar"
               />
-              <span><button v-on:click="myFilter('Open_bids')" class="btn">Open for bids</button></span>
+              <span>Open for bids</span>
             </div>
+            </button>
+            <button v-on:click="myFilter('Fixed')" class="btn">
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/price-tag-icon.png')"
                 alt="Fixed Price icon"
                 class="tag-avatar"
               />
-              <span><button v-on:click="myFilter('Fixed')" class="btn">Fixed Price</button></span>
+              <span>Fixed Price</span>
             </div>
+            </button>
           </div>
         </div>
         <div class="collection-body">
@@ -83,7 +89,9 @@
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
           />
-          <div style="display:flex; justify-content:center; align-item: center;">
+          <div
+            style="display: flex; justify-content: center; align-item: center"
+          >
             <Spinner v-if="!trendingLoader" name="ripple" color="#8c65d3" />
           </div>
         </div>
@@ -101,16 +109,16 @@
             <span class="collection-title">Explore</span>
           </div>
           <div class="collection-tags">
-              <a class="exploreAllNft_href" href="/explore">
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="all nfts"
-                class="tag-avatar explore-tag"
-              />
-              <span>All NFTs</span>
-            </div>
-              </a>
+            <a class="exploreAllNft_href" href="/explore">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/icons/tag-icon.png')"
+                  alt="all nfts"
+                  class="tag-avatar explore-tag"
+                />
+                <span>All NFTs</span>
+              </div>
+            </a>
             <div class="collection-tag">
               <img
                 :src="require('@/assets/images/icons/tag-icon.png')"
@@ -167,8 +175,10 @@
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
           />
-          <div style="display:flex; justify-content:center; align-item: center;">
-          <Spinner v-if="!exploreLoader" name="ripple" color="#8c65d3" />
+          <div
+            style="display: flex; justify-content: center; align-item: center"
+          >
+            <Spinner v-if="!exploreLoader" name="ripple" color="#8c65d3" />
           </div>
         </div>
       </div>
@@ -194,13 +204,15 @@
           </div>
         </div>
         <div>
-          <div style="display:flex; justify-content:center; align-item: center;">
-          <Spinner v-if="!userLoader" name="ripple" color="#8c65d3" />
-          <div v-for="user in users" :key="user.id">
-            <div class="collection-body">
-              <profile-card v-for="u in user" :key="u.name" :user="u" />
+          <div
+            style="display: flex; justify-content: center; align-item: center"
+          >
+            <Spinner v-if="!userLoader" name="ripple" color="#8c65d3" />
+            <div v-for="user in users" :key="user.id">
+              <div class="collection-body">
+                <profile-card v-for="u in user" :key="u.name" :user="u" />
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -240,7 +252,7 @@ export default {
       cssProps: {
         backgroundImage: "",
       },
-    }
+    };
   },
   async created() {
     // const loader = this.$loading.show({
@@ -253,15 +265,24 @@ export default {
     // this.cards = cards
     // this.users = users
 
-    const aChain = "rinkeby";
-    let connect_status = await im.connect(aChain);
-    console.log(connect_status, "status");
+    const aChain = ["rinkeby"];
+    let connect_status;
+    const user = JSON.parse(localStorage.getItem('userdata'))
+    if(!user){
+      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
+    }
+    else{
+      connect_status = await im.connect(aChain);
+    }
+
+    console.log(connect_status,"status");
     this.im = im;
+    const sts = await im.getEthereumNetwork();
 
     const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
       res.json()
     );
-    console.log("info is", info);
+    console.log("info is",  sts,info);
     let results = [];
     for (var i = 0; i < info.orders.length; i++) {
       results.push(
@@ -309,7 +330,7 @@ export default {
     this.exploreLoader = true;
     this.trendingLoader = true;
     this.userLoader = true;
-    
+
     // loader.hide();
     // let ddf =  await fetch(`${BACKEND_URL}/metadata/${order_listings[46].tokenId}.json`).then(res => res.json());
     // console.log(ddf);
@@ -365,48 +386,48 @@ export default {
       console.log(e);
     }
   },
-  methods :{
-    clickTimed(){
-      document.getElementById('Timed-click').click();
+  methods: {
+    clickTimed() {
+      document.getElementById("Timed-click").click();
     },
     myFilter(c) {
-      console.log(c, 'types of filter');
-            var x, i;
-            x = document.getElementsByClassName("itemBox");
-            // if (c == "Timed")
-            // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
-            // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
-            for (i = 0; i < x.length; i++) {
-               this.w3RemoveClass(x[i], "show");
-              if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
-            }
-          },
-
-      // Show filtered elements
-       w3AddClass(element, name) {
-        var i, arr1, arr2;
-        arr1 = element.className.split(" ");
-        arr2 = name.split(" ");
-        for (i = 0; i < arr2.length; i++) {
-          if (arr1.indexOf(arr2[i]) == -1) {
-            element.className += " " + arr2[i];
-          }
-        }
-      },
-
-      // Hide elements that are not selected
-      w3RemoveClass(element, name) {
-        var i, arr1, arr2;
-        arr1 = element.className.split(" ");
-        arr2 = name.split(" ");
-        for (i = 0; i < arr2.length; i++) {
-          while (arr1.indexOf(arr2[i]) > -1) {
-            arr1.splice(arr1.indexOf(arr2[i]), 1);
-          }
-        }
-        element.className = arr1.join(" ");
+      console.log(c, "types of filter");
+      var x, i;
+      x = document.getElementsByClassName("itemBox");
+      // if (c == "Timed")
+      // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
+      // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+      for (i = 0; i < x.length; i++) {
+        this.w3RemoveClass(x[i], "show");
+        if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
       }
-  }
+    },
+
+    // Show filtered elements
+    w3AddClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        if (arr1.indexOf(arr2[i]) == -1) {
+          element.className += " " + arr2[i];
+        }
+      }
+    },
+
+    // Hide elements that are not selected
+    w3RemoveClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        while (arr1.indexOf(arr2[i]) > -1) {
+          arr1.splice(arr1.indexOf(arr2[i]), 1);
+        }
+      }
+      element.className = arr1.join(" ");
+    },
+  },
 };
 </script>
 
@@ -668,13 +689,13 @@ section:last-child {
   }
 }
 
-.exploreAllNft_href{
+.exploreAllNft_href {
   text-decoration: none;
   color: inherit;
   margin-right: 15px;
 }
 
-.show{
-    display: block;
-  }
+.show {
+  display: block;
+}
 </style>

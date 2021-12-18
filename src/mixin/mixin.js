@@ -67,7 +67,9 @@ export default {
 
     // window.getNftMetadata = (id) => fetch(`${BACKEND_URL}/metadata/${id}.json`).then(response => response.json())
 
-    window.login = async ({ web3, account}) => {
+    //Login the user afte home page loading
+
+    window.login = async ({ web3, account = '0x000000000000000000000000000000000000'}) => {
       let message = "Welcome to Artabia!\n\nPlease sign this message to log in"
       let hash = im.web3.utils.sha3(message)
       try{

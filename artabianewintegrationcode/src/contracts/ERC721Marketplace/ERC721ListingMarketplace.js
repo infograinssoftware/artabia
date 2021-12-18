@@ -7,7 +7,7 @@ class ERC721ListingMarketplace {
     this.contractAddress = contractAddress
   }
 
-  _connect(web3, account, gasPrice) {
+  _connect(web3, account = '0x000000000000000000000000000000000000' , gasPrice) {
     this.web3 = web3
     this.account = account
 

@@ -7,7 +7,7 @@ class ERC721OrderMarketplace {
     this.contractAddress = contractAddress
   }
 
-  _connect(web3, account, gasPrice) {
+  _connect(web3, account = '0x000000000000000000000000000000000000', gasPrice) {
     this.web3 = web3
 
     this.contract = new web3.eth.Contract(abi, this.contractAddress, {
