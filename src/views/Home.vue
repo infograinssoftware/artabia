@@ -370,7 +370,7 @@ export default {
       document.getElementById('Timed-click').click();
     },
     myFilter(c) {
-      console.log(c, 'type of filter');
+      console.log(c, 'types of filter');
             var x, i;
             x = document.getElementsByClassName("itemBox");
             // if (c == "Timed")
