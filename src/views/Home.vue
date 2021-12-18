@@ -341,6 +341,7 @@ export default {
     } catch {
       console.log("no user found");
     }
+    await this.clickTimed();
 
     //   // let all_users;
     //   // for(var j=111; j<nfts_data.nfts.length; j++){
@@ -365,6 +366,9 @@ export default {
     }
   },
   methods :{
+    clickTimed(){
+      document.getElementById('Timed-click').click();
+    },
     myFilter(c) {
       console.log(c, 'type of filter');
             var x, i;
