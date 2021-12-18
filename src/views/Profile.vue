@@ -101,7 +101,6 @@ data: {
     // active: false,
     image: null,
 
-
   },
 
   methods: {
