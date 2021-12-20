@@ -3,15 +3,15 @@
 <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
   <b-card
     v-if="card"
-    :img-src="card.tokenUri.image ? card.tokenUri.image   :  defaultImg"
-    :img-alt="card.tokenUri.image"
+    :img-src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image"
+    :img-alt="checkType(card.tokenUri.image)"
     img-top
     tag="article"
     class="mb-0"
   ><h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
     <b-card-text class="flex space-x-3 items-center mt-0">
       <img :src="usernftprofile" :alt="owernImage(card.owner)" class="user-avatar">
-      <span v-if="nft_user" > @ {{nft_user}}</span>
+      <span v-if="nft_user"> @ {{nft_user}}</span>
     </b-card-text>
     <template #footer>
       <div class="footer-slot">
@@ -54,6 +54,7 @@
 
 <script>
 import VueCountdown from '@chenfengyuan/vue-countdown';
+// import { extend } from 'vue/types/umd';
 export default {
   components: {VueCountdown},
   name: 'NftCards',
@@ -63,6 +64,7 @@ export default {
       nft_user : null,
       usernftprofile : null,
       defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80",
+      isAudio : false
     }
   },
   props: {
@@ -113,6 +115,18 @@ export default {
       // console.log(endTime - Date.now()/1000) / 1000, 'difference date');
       return endTime*1000 - Date.now();
     },
+    async checkType(url){
+      let isAudiotype = await fetch(url, { method: 'HEAD'})
+      .then(res => true ? res.ok && res.headers.get('content-type').startsWith('audio') : this.isAudio = true)
+      .catch(err => console.log(err.message));
+      if(isAudiotype == true){
+        this.isAudio = true
+      }
+      else{
+        this.isAudio = false
+      }
+      return url;
+    }
   },
 }
 </script>

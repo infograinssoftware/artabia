@@ -30,6 +30,21 @@ export default {
     }
   },
   methods: {},
+  async created(){
+    const aChain = ["rinkeby"];
+    let connect_status;
+    const user = JSON.parse(localStorage.getItem('userdata'))
+    if(window.ethereum.selectedAddress === null){
+      localStorage.removeItem('userdata');
+      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
+    }
+    else if(!user){
+      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
+    }
+    else{
+      connect_status = await im.connect(aChain);
+    }
+  },
 
   mixins: [ mixin ]
 }

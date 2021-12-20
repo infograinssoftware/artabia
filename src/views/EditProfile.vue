@@ -21,7 +21,8 @@
             </div>
             <image-upload
               v-model="user.profileImage"
-              :image-url="user.profileImage"
+              :image-url="userProPhoto()"
+              v-bind:Prouser="userProPhoto()"
               @update-image="profileImageChanged($event)"
             />
           </div>
@@ -38,7 +39,8 @@
             </div>
             <image-upload
               v-model="user.coverImage"
-              :image-url="user.coverImage"
+              :image-url="userCoverPhoto()"
+              v-bind:Prouser="userCoverPhoto()"
               @update-image="coverImageChanged($event)"
             />
           </div>
@@ -347,6 +349,7 @@ export default {
       localStorage.setItem('userdata', JSON.stringify(Saveduser))
     }
       console.log("Saving profile...", updatedUser);
+      this.$router.push('/profile')
     },
     async profileImageChanged(image) {
       var file = image;
@@ -382,6 +385,12 @@ export default {
     getBioLength() {
       return this.user.bio.length;
     },
+    userProPhoto(){
+      return JSON.parse(localStorage.getItem('userdata')).user.profileImage;
+    },
+userCoverPhoto(){
+  return JSON.parse(localStorage.getItem('userdata')).user.coverImage;
+}
   },
 };
 </script>

@@ -264,10 +264,14 @@ export default {
     // console.log(users)
     // this.cards = cards
     // this.users = users
-
+``
     const aChain = ["rinkeby"];
     let connect_status;
     const user = JSON.parse(localStorage.getItem('userdata'))
+    if(window.ethereum.selectedAddress === null){
+      localStorage.removeItem('userdata');
+      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
+    }
     if(!user){
       connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
     }
@@ -329,7 +333,6 @@ export default {
     this.cards = all_nft_data;
     this.exploreLoader = true;
     this.trendingLoader = true;
-    this.userLoader = true;
 
     // loader.hide();
     // let ddf =  await fetch(`${BACKEND_URL}/metadata/${order_listings[46].tokenId}.json`).then(res => res.json());
@@ -362,6 +365,7 @@ export default {
     } catch {
       console.log("no user found");
     }
+    this.userLoader = true;
     await this.clickTimed();
 
     //   // let all_users;

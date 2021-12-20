@@ -38,14 +38,18 @@
             image: {
                 type: [String],
                 required: false,
-                default: null
+                default: JSON.parse(localStorage.getItem('userdata')).user.coverImage
+            },
+            Prouser :{
+                type: [String],
+                required: false,
             }
         },
         data() {
             return {
                 fetchedImage: null,
                 uploadImage: null,
-                uploadZoneVisible: null
+                uploadZoneVisible: null,
             }
         },
         computed: {
@@ -68,7 +72,9 @@
             }
         },
         created() {
-            this.fetchedImage = this.image
+            console.log(this.Prouser, 'dfdsfdsfsdfdsf')
+            this.fetchedImage = this.Prouser
+            this.uploadImage = this.Prouser
         },
         methods: {
             addFile(e) {
@@ -94,7 +100,7 @@
                     console.log('upload image called', file)
                     this.uploadImage = file
                 }
-            }
+            },
         }
     }
 </script>
