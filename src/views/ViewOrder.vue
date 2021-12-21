@@ -26,7 +26,7 @@
           </ul>
 
         </div>
-        <button v-if="!im || !im.account.toLowerCase() == ownerAddress.toLowerCase()" class="artabia-dark-color w-full text-white py-3 font-semibold rounded py-1" @click="openPop">{{ fixed ? 'Buy' : open ? 'Place an offer' : 'Place a bid' }}</button>
+        <button v-if="im.account.toLowerCase() !== ownerAddress.toLowerCase()" class="artabia-dark-color w-full text-white py-3 font-semibold rounded py-1" @click="openPop">{{ fixed ? 'Buy' : open ? 'Place an offer' : 'Place a bid' }}</button>
         <button v-if="!im || im.account.toLowerCase() == ownerAddress.toLowerCase()" class="artabia-dark-color-text w-full bg-white py-3 font-semibold rounded py-1" @click="accept">Accept highest offer</button>
         <div class="flex justify-between">
           <div class="flex">
@@ -350,7 +350,8 @@ export default {
     console.log(displayInfo, 'this is dfdf');
     this.owner = order.owner.substr(0, 12)
     this.ownerAddress = order.owner
-
+    console.log(this.ownerAddress, 'thisiis the owner')
+    console.log
 
     this.title = metadata.name
     this.description = metadata.description
@@ -372,10 +373,10 @@ export default {
       ethValueInWei,
       'ether'
     )
-    this.ethPrice = 2300000000000000
+    this.ethPrice = 4021
     // this.ethPrice = await getEthPrice()
-    let mt = await this.axios.get(`https://api-rinkeby.etherscan.io/api?module=stats&action=ethprice&apikey=XU1QP5487BANTMRSVBIPP61B3CPNIXB216`)
-    console.log(this.ethPrice,mt, 'eth price is here')
+    // let mt = await this.axios.get(`https://api-rinkeby.etherscan.io/api?module=stats&action=ethprice&apikey=XU1QP5487BANTMRSVBIPP61B3CPNIXB216`)
+    // console.log(this.ethPrice,mt, 'eth price is here')
 
     if(this.limited) {
       this.timeToGo = timeToGo(new Date(parseInt(order.endsAt) * 1000))
