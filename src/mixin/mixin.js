@@ -47,7 +47,7 @@ export default {
     window.BACKEND_URL='https://artabia.com:3001'
 
     // window.ETHERSCAN_KEY='R9ECHH6U5WVVPQJ683W7K96M9MU2Q2VQDC'
-    window.ETHERSCAN_KEY = 'XVMNZKGP7PKW3R7918EMWDDTXXYHA9E75X'
+    window.ETHERSCAN_KEY = 'XU1QP5487BANTMRSVBIPP61B3CPNIXB216'
     // headers = {
     //   'User-Agent': "PostmanRuntime/7.17.1",
     //   'Accept': "/",

@@ -26,7 +26,7 @@
           </ul>
 
         </div>
-        <button class="artabia-dark-color w-full text-white py-3 font-semibold rounded py-1" @click="openPop">{{ fixed ? 'Buy' : open ? 'Place an offer' : 'Place a bid' }}</button>
+        <button v-if="!im || !im.account.toLowerCase() == ownerAddress.toLowerCase()" class="artabia-dark-color w-full text-white py-3 font-semibold rounded py-1" @click="openPop">{{ fixed ? 'Buy' : open ? 'Place an offer' : 'Place a bid' }}</button>
         <button v-if="!im || im.account.toLowerCase() == ownerAddress.toLowerCase()" class="artabia-dark-color-text w-full bg-white py-3 font-semibold rounded py-1" @click="accept">Accept highest offer</button>
         <div class="flex justify-between">
           <div class="flex">
@@ -357,6 +357,7 @@ export default {
     this.src = metadata.image
     this.address = order.tokenAddress
     this.id = web3.utils.toHex(order.tokenId)
+    console.log(this.id, 'this iss the id that i am gettin after hashing')
     this.hasUnlockable = displayInfo.unlockable ? 'Yes' : 'No'
     this.category = displayInfo.category
     this.royalty = displayInfo.royalty + '%'
@@ -371,9 +372,10 @@ export default {
       ethValueInWei,
       'ether'
     )
-
-    this.ethPrice = await getEthPrice()
-    console.log(this.ethPrice, 'eth price is here')
+    this.ethPrice = 2300000000000000
+    // this.ethPrice = await getEthPrice()
+    let mt = await this.axios.get(`https://api-rinkeby.etherscan.io/api?module=stats&action=ethprice&apikey=XU1QP5487BANTMRSVBIPP61B3CPNIXB216`)
+    console.log(this.ethPrice,mt, 'eth price is here')
 
     if(this.limited) {
       this.timeToGo = timeToGo(new Date(parseInt(order.endsAt) * 1000))
