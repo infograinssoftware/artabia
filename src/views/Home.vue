@@ -281,19 +281,19 @@ export default {
 
     console.log(connect_status,"status");
     this.im = im;
-    const sts = await im.getEthereumNetwork();
+    // const sts = await im.getEthereumNetwork();
 
     const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
       res.json()
     );
-    console.log("info is",  sts,info);
+    console.log("info is", info);
     let results = [];
     for (var i = 0; i < info.orders.length; i++) {
       results.push(
         await Promise.all([
-          im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i]),
-          im.contracts.erc721ListingMarketplace.getListing(info.orders[i]),
-          im.contracts.erc721OrderMarketplace.getOrder(info.orders[i]),
+          im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
+          im.contracts.erc721ListingMarketplace.getListing(info.orders[i].id),
+          im.contracts.erc721OrderMarketplace.getOrder(info.orders[i].id),
         ])
       );
     }
