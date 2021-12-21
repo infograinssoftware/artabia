@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+#app{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
 
 #loading {
     display: inline-block;

@@ -1,19 +1,39 @@
 <template>
 <div :class="`itemBox ${card.price ? 'Fixed' : ''} ${card.offer ? 'Open_bids' : ''} ${card.endsAt ? 'Timed' : ''} `">
-<a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
-  <b-card
+<!-- <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable"> -->
+  <!-- <b-card
     v-if="card"
     :img-src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image"
     :img-alt="checkType(card.tokenUri.image)"
     img-top
     tag="article"
     class="mb-0"
-  ><h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
+  > -->
+<!-- 
+    <h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
     <b-card-text class="flex space-x-3 items-center mt-0">
       <img :src="usernftprofile" :alt="owernImage(card.owner)" class="user-avatar">
       <span v-if="nft_user"> @ {{nft_user}}</span>
-    </b-card-text>
-    <template #footer>
+    </b-card-text> -->
+  <!-- custom card  -->
+        <div v-if="card" class="card" style="width: 18rem;" tag="article">
+
+          <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
+              <img :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" class="card-img-top" :alt="checkType(card.tokenUri.image)">
+          </a>
+
+          <div class="card-body">
+                <h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
+                <div class="flex space-x-3 items-center mt-0">
+                  <img :src="usernftprofile" :alt="owernImage(card.owner)" class="user-avatar">
+                  <span v-if="nft_user"> @ {{nft_user}}</span>
+                </div>
+          </div>
+
+        <!-- </div> -->
+  <!-- custom card  -->
+    <template >
+      <a class="nft-cardClickable" :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`">
       <div class="footer-slot">
         <div class="price price flex px-2 py-2.5 items-center">
           <span class="flex flex-col text-left">
@@ -46,9 +66,10 @@
           </div> -->
         </div>
       </div>
+      </a>
     </template>
-  </b-card>
-</a>
+  </div>
+<!-- </a> -->
 </div>
 </template>
 

@@ -4,7 +4,7 @@
             <div v-if="results.nfts" class="result-category">
                 <span class="result-category-title">NFTs</span>
                 <div class="justify-content-end d-flex ">
-                    <h6 class="text-center text-white" v-if="results.nfts.length < 1">No NFT Found</h6>
+                    <h6 class="text-center text-white no-nft-foundtxt" v-if="results.nfts.length < 1">No NFT Found</h6>
                 </div>
                 
                 <div
@@ -32,7 +32,7 @@
             <div v-if="results.users" class="result-category">
                 <span class="result-category-title">Users</span>
                 <div class="justify-content-end d-flex ">
-                    <h6 class="text-end text-white" v-if="results.users.length < 1">No User Found</h6>
+                    <h6 class="text-end text-white no-user-foundtxt" v-if="results.users.length < 1">No User Found</h6>
                 </div>
                 <div
                     v-for="user in results.users"
@@ -106,6 +106,16 @@
     align-self: flex-start;
 }
 
+.result-category .no-nft-foundtxt{
+    color: grey !important;
+    font-size: 15px;
+}
+
+.result-category .no-user-foundtxt{
+    color: grey !important;
+    font-size: 15px;
+}
+
 .result-item {
     margin-top: 1rem;
     display: flex;
@@ -176,7 +186,7 @@
         padding: 1rem;
         top: 100%;
         left: 0;
-        transform: translateX(-4%);
+        transform: translateX(1%);
     }
 }
 </style>
