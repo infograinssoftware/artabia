@@ -1,21 +1,36 @@
 <template>
-    <a :href="`/view-user/${user.id}`">
-    <b-card
+        <div v-if="user" class="card" style="width: 18rem;" tag="article">
+
+          <a :href="`/view-user/${user.id}`" class="profileCard_Link">
+              <img :src="user.coverImage? user.coverImage : defaultImg" class="card-img-top" :alt="user.name">
+
+          <div class="card-body">
+                        <img :src="user.profileImage ? user.profileImage : defaultImg" alt="" class="user-avatar">
+                <h4 class="card-title">{{ user.name ? user.name : shortenAddress(user.id) }}</h4>
+                <router-link to="#" class="username">
+                    <span>@{{ user.username  ? user.name : shortenAddress(user.id)}}</span>
+                </router-link>
+                <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span>
+          </div>
+          </a>
+<!-- ----Custom card----- -->
+    <!-- <a :href="`/view-user/${user.id}`"> -->
+    <!-- <b-card
         v-if="user"
         :img-src="user.coverImage? user.coverImage : defaultImg"
         :img-alt="user.name"
         img-top
         tag="article"
         class="mb-2"
-    >
-        <img :src="user.profileImage ? user.profileImage : defaultImg" alt="" class="user-avatar">
+    > -->
+        <!-- <img :src="user.profileImage ? user.profileImage : defaultImg" alt="" class="user-avatar">
         <h4 class="card-title">{{ user.name ? user.name : shortenAddress(user.id) }}</h4>
         <router-link to="#" class="username">
             <span>@{{ user.username  ? user.name : shortenAddress(user.id)}}</span>
         </router-link>
-        <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span>
-        <template #footer>
-            <div class="footer-slot">
+        <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span> -->
+        <template>
+            <div class="footer-slot card-footer">
                 <div class="followers">
                     <span>
                         {{ user.followerCount }}
@@ -27,8 +42,9 @@
                 </div>
             </div>
         </template>
-    </b-card>
-    </a>
+    <!-- </b-card> -->
+    <!-- </a> -->
+        </div>
 </template>
 
 <script>
@@ -68,6 +84,14 @@
 </script>
 
 <style scoped>
+    .profileCard_Link{
+        color: inherit;
+    }
+
+    .profileCard_Link:hover{
+        text-decoration: none;
+    }
+
     .card {
         max-width: 17rem;
         box-shadow: 0px 0px 48px -13px rgba(0,0,0,0.36);
