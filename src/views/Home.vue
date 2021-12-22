@@ -44,7 +44,11 @@
           />
           <span class="collection-title">Trending</span>
           <div class="collection-tags">
-            <button id="Timed-click" v-on:click="myFilter('Timed')" class="btn">
+            <button
+              id="Timed-click"
+              v-on:click="trendingFilter('Timed')"
+              class="btn"
+            >
               <div class="collection-tag">
                 <img
                   :src="require('@/assets/images/icons/hourglass-icon.png')"
@@ -54,25 +58,25 @@
                 <span>Timed Auctions</span>
               </div>
             </button>
-            <button v-on:click="myFilter('Open_bids')" class="btn">
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/infinity-icon.png')"
-                alt="open for bids icon"
-                class="tag-avatar"
-              />
-              <span>Open for bids</span>
-            </div>
+            <button v-on:click="trendingFilter('Open_bids')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/icons/infinity-icon.png')"
+                  alt="open for bids icon"
+                  class="tag-avatar"
+                />
+                <span>Open for bids</span>
+              </div>
             </button>
-            <button v-on:click="myFilter('Fixed')" class="btn">
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/price-tag-icon.png')"
-                alt="Fixed Price icon"
-                class="tag-avatar"
-              />
-              <span>Fixed Price</span>
-            </div>
+            <button v-on:click="trendingFilter('Fixed')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/icons/price-tag-icon.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar"
+                />
+                <span>Fixed Price</span>
+              </div>
             </button>
           </div>
         </div>
@@ -109,56 +113,66 @@
             <span class="collection-title">Explore</span>
           </div>
           <div class="collection-tags">
-            <a class="exploreAllNft_href" href="/explore">
+            <a href="/explore" class="text-dark text-decoration-none">
               <div class="collection-tag">
                 <img
-                  :src="require('@/assets/images/icons/tag-icon.png')"
-                  alt="all nfts"
-                  class="tag-avatar explore-tag"
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
                 />
                 <span>All NFTs</span>
               </div>
             </a>
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="artwork"
-                class="tag-avatar explore-tag"
-              />
-              <span>Artwork</span>
-            </div>
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="photography"
-                class="tag-avatar explore-tag"
-              />
-              <span>Photography</span>
-            </div>
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="audio"
-                class="tag-avatar explore-tag"
-              />
-              <span>Audio</span>
-            </div>
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="video"
-                class="tag-avatar explore-tag"
-              />
-              <span>Video</span>
-            </div>
-            <div class="collection-tag">
-              <img
-                :src="require('@/assets/images/icons/tag-icon.png')"
-                alt="collectibles"
-                class="tag-avatar explore-tag"
-              />
-              <span>Collectibles</span>
-            </div>
+            <button id="Artwork" v-on:click="exploreFilter('Artwork')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
+                />
+                <span>Artwork</span>
+              </div>
+            </button>
+            <button v-on:click="exploreFilter('Photography')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
+                />
+                <span>Photography</span>
+              </div>
+            </button>
+            <button v-on:click="exploreFilter('Audio')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
+                />
+                <span>Audio</span>
+              </div>
+            </button>
+            <button v-on:click="exploreFilter('Video')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
+                />
+                <span>Video</span>
+              </div>
+            </button>
+            <button v-on:click="exploreFilter('Collectibles')" class="btn">
+              <div class="collection-tag">
+                <img
+                  :src="require('@/assets/images/bg-pattern.png')"
+                  alt="Fixed Price icon"
+                  class="tag-avatar h-6"
+                />
+                <span>Collectibles</span>
+              </div>
+            </button>
           </div>
         </div>
         <div class="collection-body">
@@ -168,13 +182,18 @@
                      leftSideTextBottom="0,1 ETH"
                      leftSideTextTop="Current bid"/>
         </div> -->
-          <nft-cards
+         <explore-nft v-for="card in cards"
+                     :key="card.tokenId"
+                     :card="card"
+                     leftSideTextBottom = "0.1 ETH"
+                     leftSideTextTop="Current Price"/>
+          <!-- <nft-cards
             v-for="card in cards"
             :key="card.tokenId"
             :card="card"
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
-          />
+          /> -->
           <div
             style="display: flex; justify-content: center; align-item: center"
           >
@@ -225,6 +244,7 @@ import ItemCard from "@/components/ItemCard";
 import ProfileCard from "@/components/ProfileCard";
 import NftCards from "@/components/NftCards";
 import Spinner from "vue-spinkit";
+import ExploreNft from "@/components/ExploreNft";
 // import NftCards from '../components/nftCards.vue'
 
 export default {
@@ -233,6 +253,7 @@ export default {
     ProfileCard,
     NftCards,
     Spinner,
+    ExploreNft
   },
   // pro
   //   NftCardsps: {
@@ -264,29 +285,36 @@ export default {
     // console.log(users)
     // this.cards = cards
     // this.users = users
-``
+    ``;
     const aChain = ["rinkeby"];
     let connect_status;
-    const user = JSON.parse(localStorage.getItem('userdata'))
-    if(window.ethereum.selectedAddress === null){
-      localStorage.removeItem('userdata');
-      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
+    const user = JSON.parse(localStorage.getItem("userdata"));
+    if (window.ethereum.selectedAddress === null) {
+      localStorage.removeItem("userdata");
+      connect_status = await im.connect(
+        aChain,
+        ethereumNode,
+        "0x0000000000000000000000000000000000000000"
+      );
     }
-    if(!user){
-      connect_status = await im.connect(aChain, ethereumNode, '0x0000000000000000000000000000000000000000');
-    }
-    else{
+    if (!user) {
+      connect_status = await im.connect(
+        aChain,
+        ethereumNode,
+        "0x0000000000000000000000000000000000000000"
+      );
+    } else {
       connect_status = await im.connect(aChain);
     }
 
-    console.log(connect_status,"status");
+    console.log(connect_status, "status");
     this.im = im;
-    // const sts = await im.getEthereumNetwork();
 
     const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
       res.json()
     );
     console.log("info is", info);
+
     let results = [];
     for (var i = 0; i < info.orders.length; i++) {
       results.push(
@@ -294,6 +322,8 @@ export default {
           im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
           im.contracts.erc721ListingMarketplace.getListing(info.orders[i].id),
           im.contracts.erc721OrderMarketplace.getOrder(info.orders[i].id),
+          info.orders[i].category,
+          info.orders[i].id,
         ])
       );
     }
@@ -301,9 +331,14 @@ export default {
     // // ;
     let order_listings = [];
     for (let i = 0; i < results.length; i++) {
-      for (let j = 0; j < results[i].length; j++) {
+      for (let j = 0; j < results[i].length - 2; j++) {
         if (results[i][j] != null) {
-          order_listings.push(results[i][j]);
+          console.log(results[i][j], "result of i and j");
+          order_listings.push({
+            result: results[i][j],
+            type: results[i][j + 1],
+            orderId: results[i][j + 2],
+          });
         }
       }
     }
@@ -319,11 +354,57 @@ export default {
       // console.log(order_listings[order_listing],'order listing ');
       // order_listing_image.push(order_listings[order_listing])
 
-      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then((res) => res.json());
-      console.log(order_listing_image);
-      all_nft_data.push(Object.assign(order_listings[order_listing], {tokenUri: order_listing_image,}));
+      order_listing_image = await fetch(
+        `${BACKEND_URL}/metadata/${order_listings[order_listing].result.tokenId}.json`
+      ).then((res) => res.json());
+      // console.log(order_listing_image);
+      all_nft_data.push(
+        Object.assign(order_listings[order_listing], {
+          tokenUri: order_listing_image,
+        })
+      );
     }
     console.log(all_nft_data, "data after push");
+
+    // const sts = await im.getEthereumNetwork();
+
+    // const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
+    //   res.json()
+    // );
+    // console.log("info is", info);
+    // let results = [];
+    // for (var i = 0; i < info.orders.length; i++) {
+    //   results.push(
+    //     await Promise.all([
+    //       im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
+    //       im.contracts.erc721ListingMarketplace.getListing(info.orders[i].id),
+    //       im.contracts.erc721OrderMarketplace.getOrder(info.orders[i].id),
+    //     ])
+    //   );
+    // }
+    // console.log("result is", results);
+    // // // ;
+    // let order_listings = [];
+    // for (let i = 0; i < results.length; i++) {
+    //   for (let j = 0; j < results[i].length; j++) {
+    //     if (results[i][j] != null) {
+    //       order_listings.push(results[i][j]);
+    //     }
+    //   }
+    // }
+    // console.log(order_listings, "list of all the nfts");
+
+    // let order_listing_image = null;
+    // let all_nft_data = [];
+    // for (let order_listing = 0;order_listing < order_listings.length;order_listing++) {
+    //   // console.log(order_listings[order_listing],'order listing ');
+    //   // order_listing_image.push(order_listings[order_listing])
+
+    //   order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then((res) => res.json());
+    //   console.log(order_listing_image);
+    //   all_nft_data.push(Object.assign(order_listings[order_listing], {tokenUri: order_listing_image,}));
+    // }
+    // console.log(all_nft_data, "data after push");
     this.cards = all_nft_data;
     this.exploreLoader = true;
     this.trendingLoader = true;
@@ -360,8 +441,8 @@ export default {
       console.log("no user found");
     }
     this.userLoader = true;
-    await this.clickTimed();
-
+    await this.trendingClick();
+    await this.exploreClick();
     //   // let all_users;
     //   // for(var j=111; j<nfts_data.nfts.length; j++){
     //   //     all_users +=
@@ -385,10 +466,25 @@ export default {
     }
   },
   methods: {
-    clickTimed() {
+    trendingClick() {
       document.getElementById("Timed-click").click();
     },
-    myFilter(c) {
+    exploreClick() {
+      document.getElementById("Artwork").click();
+    },
+    exploreFilter(c) {
+      console.log(c, "types of filter");
+      var x, i;
+      x = document.getElementsByClassName("itemBox");
+      
+      // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
+      // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+      for (i = 0; i < x.length; i++) {
+        this.w3RemoveClass(x[i], "show");
+        if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
+      }
+    },
+    trendingFilter(c) {
       console.log(c, "types of filter");
       var x, i;
       x = document.getElementsByClassName("itemBox");

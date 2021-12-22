@@ -18,8 +18,36 @@
   <!-- custom card  -->
         <div v-if="card" class="card" style="width: 18rem;" tag="article">
           
-          <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
-              <img :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" class="card-img-top" :alt="checkType(card.tokenUri.image)">
+          <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable" :v-once="checkType(card.tokenUri.image)">
+              <!-- <img :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" class="card-img-top" :alt="checkType(card.tokenUri.image)"> -->
+              <div class="flex-1 flex justify-center items-center preview">
+        <figure>
+          <img
+            v-if="ext === 'image'"
+            class="h-80 object-scale-down card-img-top"
+            :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image"
+            alt="name"
+          />
+        </figure>
+
+        <figure
+          v-if="ext === 'audio'"
+          class="bg-audio h-80 bg-cover flex items-end justify-center py-3"
+        >
+          <audio controls>
+            <source :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" type="audio/ogg" />
+          </audio>
+        </figure>
+
+        <figure>
+          <model-gltf src="blob:http://localhost:8080/2d13cf28-4ab1-440b-97d6-1ca0762c7b84"></model-gltf>
+        </figure>
+
+        <video v-if="ext === 'video'" class="h-80" controls>
+          <source :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" />
+        </video>
+
+      </div>
           </a>
 
           <div class="card-body">
@@ -74,10 +102,12 @@
 </template>
 
 <script>
+import { ModelGltf } from "/src/assets/plugin/vue-model";
+
 import VueCountdown from '@chenfengyuan/vue-countdown';
 // import { extend } from 'vue/types/umd';
 export default {
-  components: {VueCountdown},
+  components: {VueCountdown, ModelGltf},
   name: 'NftCards',
   data(){
     
@@ -85,7 +115,14 @@ export default {
       nft_user : null,
       usernftprofile : null,
       defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80",
-      isAudio : false
+      isAudio : false,
+      ext: null,
+      extensions: {
+        img: ["jpg", "png", "gif", "svg", "webp"],
+        audio: ["mp3"],
+        video: ["mp4", "wav", "ogg"],
+        model3d: ["glb", "gltf"],
+      },
     }
   },
   props: {
@@ -116,6 +153,25 @@ export default {
   //   }
   // },
   methods: {
+        onload(e) {
+      this.image = this.src = e;
+      console.log(
+        this.image,
+        "sdfsd",
+        this.src.name,
+        this.src.name.split(".").pop()
+      );
+      let ext = this.src.name.split(".").pop();
+
+      for (const property in this.extensions) {
+        this.extensions[property].includes(ext) ? (ext = property) : "";
+      }
+
+      this.ext = ext;
+      console.log(this.image, " is the xetendssion", this.src);
+      this.url = window.URL.createObjectURL(this.src);
+      console.log(this.url, "url after compress");
+    },
       shortenAddress(ownerAddress) {
         return ownerAddress.substring(0, 6) + '...' + ownerAddress.substring(ownerAddress.length - 4)
     },
@@ -137,15 +193,24 @@ export default {
       return endTime*1000 - Date.now();
     },
     async checkType(url){
-      let isAudiotype = await fetch(url, { method: 'HEAD'})
-      .then(res => true ? res.ok && res.headers.get('content-type').startsWith('audio') : this.isAudio = true)
+      try{
+
+        let isAudiotype = await fetch(url, { method: 'HEAD'})
+      .then(res => true ? res.ok && res.headers.get('content-type') : this.isAudio = true)
       .catch(err => console.log(err.message));
-      if(isAudiotype == true){
-        this.isAudio = true
+      console.log(isAudiotype, '6this is the audio')
+      this.ext = isAudiotype.split('/')[0]
       }
-      else{
-        this.isAudio = false
+      catch(e){
+        this.ext = 'model3d'
+        console.log('got the error')
       }
+      // if(isAudiotype == true){
+      //   this.isAudio = true
+      // }
+      // else{
+      //   this.isAudio = false
+      // }
       return url;
     }
   },

@@ -465,13 +465,15 @@ export default {
         this.src.name.split(".").pop()
       );
       let ext = this.src.name.split(".").pop();
-
+      console.log(ext, 'after extensionsdfdfffffffffffffffffffffffffffffffffffffffffffff')
       for (const property in this.extensions) {
-        this.extensions[property].includes(ext) ? (ext = property) : "";
+
+        this.extensions[property].includes(ext) ? (ext = property) : "glb";
       }
 
       this.ext = ext;
-      console.log(this.image, " is the xetendssion", this.src);
+      // this.image.type = 'model3d'
+      console.log(this.ext,this.image, this.image.type, " is the xetendssion", this.src);
       this.url = window.URL.createObjectURL(this.src);
       console.log(this.url, "url after compress");
     },
