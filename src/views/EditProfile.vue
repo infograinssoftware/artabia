@@ -227,7 +227,7 @@ import userProfile from "@/UserProfile.json";
 import ImageUpload from "@/components/ImageUpload";
 import Swal from "sweetalert2";
 export default {
-  components: { ImageUpload,  Swal},
+  components: { ImageUpload, Swal },
   data() {
     return {
       user: {
@@ -256,9 +256,11 @@ export default {
   },
   created() {
     this.user = JSON.parse(localStorage.getItem("userdata")).user;
-    const base64String = btoa(String.fromCharCode(...new Uint8Array(this.user.profileImage.data)));
+    const base64String = btoa(
+      String.fromCharCode(...new Uint8Array(this.user.profileImage.data))
+    );
     const decodedString = atob(base64String);
-    this.user.profileImage = decodedString
+    this.user.profileImage = decodedString;
   },
   methods: {
     showSuccss() {
@@ -326,71 +328,93 @@ export default {
           },
         }
       );
-    if(updatedUser.status == 200){
-      this.showSuccss()
-      let Saveduser =  JSON.parse(localStorage.getItem("userdata"))
-      Saveduser.user.name =  this.user.name
-      Saveduser.user.username =  this.user.username
-      Saveduser.user.email =  this.user.email
-      Saveduser.user.bio =  this.user.bio
-      Saveduser.user.lang =  this.user.lang
-      Saveduser.user.profileImage =  this.user.profileImage
-      Saveduser.user.coverImage =  this.user.coverImage
-      Saveduser.user.createdAt =  this.user.createdAt
-      Saveduser.user.social.website =  this.user.social.website
-      Saveduser.user.social.discord =  this.user.social.discord
-      Saveduser.user.social.youtube =  this.user.social.youtube
-      Saveduser.user.social.facebook =  this.user.social.facebook
-      Saveduser.user.social.twitch =  this.user.social.twitch
-      Saveduser.user.social.tiktok =  this.user.social.tiktok
-      Saveduser.user.social.snapchat =  this.user.social.snapchat
-      Saveduser.token = Saveduser.token
-      Saveduser.message = `The user with id: ${Saveduser.user.id} was found.`
-      localStorage.setItem('userdata', JSON.stringify(Saveduser))
-    }
+      if (updatedUser.status == 200) {
+        this.showSuccss();
+        let Saveduser = JSON.parse(localStorage.getItem("userdata"));
+        Saveduser.user.name = this.user.name;
+        Saveduser.user.username = this.user.username;
+        Saveduser.user.email = this.user.email;
+        Saveduser.user.bio = this.user.bio;
+        Saveduser.user.lang = this.user.lang;
+        Saveduser.user.profileImage = this.user.profileImage;
+        Saveduser.user.coverImage = this.user.coverImage;
+        Saveduser.user.createdAt = this.user.createdAt;
+        Saveduser.user.social.website = this.user.social.website;
+        Saveduser.user.social.discord = this.user.social.discord;
+        Saveduser.user.social.youtube = this.user.social.youtube;
+        Saveduser.user.social.facebook = this.user.social.facebook;
+        Saveduser.user.social.twitch = this.user.social.twitch;
+        Saveduser.user.social.tiktok = this.user.social.tiktok;
+        Saveduser.user.social.snapchat = this.user.social.snapchat;
+        Saveduser.token = Saveduser.token;
+        Saveduser.message = `The user with id: ${Saveduser.user.id} was found.`;
+        localStorage.setItem("userdata", JSON.stringify(Saveduser));
+      }
       console.log("Saving profile...", updatedUser);
-      this.$router.push('/profile')
+      this.$router.push("/profile");
     },
     async profileImageChanged(image) {
       var file = image;
       var reader = await new FileReader();
       let r_reader;
       reader.onloadend = () => {
-        console.log('RESULT', reader.result)
-        this.user.profileImage = reader.result
-        r_reader =  reader.result;
+        console.log("RESULT", reader.result);
+        this.user.profileImage = reader.result;
+        r_reader = reader.result;
       };
       reader.readAsDataURL(file);
     },
     async coverImageChanged(image) {
-      console.log(image, 'image is here')
+      console.log(image, "image is here");
       var coverFile = image;
       var coverReader = await new FileReader();
       let cover_reader;
       coverReader.onloadend = () => {
-        console.log('RESULT', coverReader.result)
-        this.user.coverImage = coverReader.result
-        cover_reader =  coverReader.result;
+        console.log("RESULT", coverReader.result);
+        this.user.coverImage = coverReader.result;
+        cover_reader = coverReader.result;
       };
       coverReader.readAsDataURL(coverFile);
     },
-    checkUsernameAvailability() {
-      console.log("Checking username availability...");
+    async checkUsernameAvailability() {
+      console.log(
+        this.user.username,
+        "Checking username availability...",
+        JSON.parse(localStorage.getItem("userdata")).token
+      );
+
       if (this.user.username) {
-        this.usernameExists = true;
-      } else {
-        this.usernameExists = false;
+        let usernameCheck = { username: this.user.username };
+
+        let isAlready = await fetch("https://artabia.com:3001/user/username-exists/", {
+          method: "post",
+          body: JSON.stringify(usernameCheck),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              `${
+                JSON.parse(localStorage.getItem("userdata")).token
+              }`
+          },
+        }).then((res) => res.json());
+        if (isAlready.exists) {
+          console.log("already ", isAlready);
+          this.usernameExists = true;
+        } else {
+          console.log("Not exist ", isAlready);
+          this.usernameExists = false;
+        }
       }
     },
     getBioLength() {
       return this.user.bio.length;
     },
-    userProPhoto(){
-      return JSON.parse(localStorage.getItem('userdata')).user.profileImage;
+    userProPhoto() {
+      return JSON.parse(localStorage.getItem("userdata")).user.profileImage;
     },
-userCoverPhoto(){
-  return JSON.parse(localStorage.getItem('userdata')).user.coverImage;
-}
+    userCoverPhoto() {
+      return JSON.parse(localStorage.getItem("userdata")).user.coverImage;
+    },
   },
 };
 </script>

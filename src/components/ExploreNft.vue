@@ -1,5 +1,5 @@
 <template>
-<div :class="`itemBox ${card.price ? 'Fixed' : ''} ${card.offer ? 'Open_bids' : ''} ${card.endsAt ? 'Timed' : ''} `">
+<div :class="`itemBox ${card.type}`">
 <!-- <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable"> -->
   <!-- <b-card
     v-if="card"
@@ -18,14 +18,14 @@
   <!-- custom card  -->
         <div v-if="card" class="card" style="width: 18rem;" tag="article">
           
-          <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable">
+          <a :href="`/view-order/ethereum/${card.orderId !== null ? card.orderId : ''}`" class="nft-cardClickable">
               <img :src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image" class="card-img-top" :alt="checkType(card.tokenUri.image)">
           </a>
 
           <div class="card-body">
                 <h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
                 <div class="flex space-x-3 items-center mt-0">
-                  <img :src="usernftprofile" :alt="owernImage(card.owner)" class="user-avatar">
+                  <img :src="usernftprofile" :alt="owernImage(card.result.owner)" class="user-avatar">
                   <span v-if="nft_user"> @ {{nft_user}}</span>
                 </div>
           </div>
@@ -33,20 +33,20 @@
         <!-- </div> -->
   <!-- custom card  -->
     <template >
-      <a class="nft-cardClickable" :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`">
+      <a class="nft-cardClickable" :href="`/view-order/ethereum/${card.orderId !== null ? card.orderId : ''}`">
       <div class="footer-slot">
         <div class="price price flex px-2 py-2.5 items-center">
           <span class="flex flex-col text-left">
-            <span :class="leftSideTextTopClass">Current {{card.price ? 'Price': 'Bid'}} </span>
-            <span v-if="card.price">{{ethPrice(card.price)}}</span>
-            <span v-if="card.offer">{{ethPrice(card.offer)}}</span>
+            <span :class="leftSideTextTopClass">Current {{card.result.price ? 'Price': 'Bid'}} </span>
+            <span v-if="card.result.price">{{ethPrice(card.result.price)}}</span>
+            <span v-if="card.result.offer">{{ethPrice(card.result.offer)}}</span>
 
           </span>
 
-          <span v-if="card.endsAt" class="flex flex-col text-right">
+          <span v-if="card.result.endsAt" class="flex flex-col text-right">
             <span> Ending in</span>
             <span>
-              <vue-countdown :time="`${biddingTime(parseInt(card.endsAt))}`" v-slot="{ days, hours, minutes, seconds }">
+              <vue-countdown :time="`${biddingTime(parseInt(card.result.endsAt))}`" v-slot="{ days, hours, minutes, seconds }">
                 {{ days }} d, {{ hours }} h, {{ minutes }} m, {{ seconds }} s
               </vue-countdown>  
             </span>            
@@ -78,7 +78,7 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
 // import { extend } from 'vue/types/umd';
 export default {
   components: {VueCountdown},
-  name: 'NftCards',
+  name: 'ExploreNft',
   data(){
     
     return {
@@ -232,5 +232,8 @@ export default {
 }
 .itemBox{
   display: none;
+}
+.show{
+  display: block;
 }
 </style>

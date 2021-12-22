@@ -5,6 +5,7 @@
       <div class="collection-header flex-col md:flex-row">
 
         <div class="collection-tags justify-center mb-6">
+          <button id="All-click" v-on:click="myFilter('All')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -13,6 +14,8 @@
             >
             <span>All NFTs</span>
           </div>
+          </button>
+          <button v-on:click="myFilter('Artwork')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -21,6 +24,8 @@
             >
             <span>Artwork</span>
           </div>
+          </button>
+          <button v-on:click="myFilter('Photography')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -29,6 +34,8 @@
             >
             <span>Photography</span>
           </div>
+          </button>
+          <button v-on:click="myFilter('Audio')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -37,6 +44,8 @@
             >
             <span>Audio</span>
           </div>
+          </button>
+          <button v-on:click="myFilter('Video')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -45,6 +54,8 @@
             >
             <span>Video</span>
           </div>
+          </button>
+          <button v-on:click="myFilter('Collectibles')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -53,13 +64,14 @@
             >
             <span>Collectibles</span>
           </div>
+          </button>
         </div>
       </div>
       <div class="collection-body" v-if="noNFT">
         <h3>No NFTs are available</h3>
       </div>
       <div class="collection-body" v-if="cards">
-        <nft-cards v-for="card in cards"
+        <explore-nft v-for="card in cards"
                      :key="card.tokenId"
                      :card="card"
                      leftSideTextBottom = "0.1 ETH"
@@ -82,13 +94,13 @@ import users from '@/UserProfiles.json'
 
 import ItemCard from '@/components/ItemCard'
 import ProfileCard from '@/components/ProfileCard'
-import NftCards from '@/components/NftCards'
+import ExploreNft from '@/components/ExploreNft'
 import Spinner from "vue-spinkit";
 
 export default {
   name: 'Explore',
   components: {
-    ItemCard, ProfileCard, NftCards, Spinner
+    ItemCard, ProfileCard, ExploreNft, Spinner
   },
   data() {
     return {
@@ -98,8 +110,6 @@ export default {
       exploreLoader: true,
       cssProps: {
         backgroundImage: ''
-
-
       }
     }
   },
@@ -112,12 +122,15 @@ export default {
     this.im = im
     const info = await fetch(`${BACKEND_URL}/order/trending`).then(res => res.json());
     console.log("info is",info);
+
     let results = [];
     for(var i=0; i<info.orders.length;i++){
       results.push(await Promise.all([
-      im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i]),
-      im.contracts.erc721ListingMarketplace.getListing(info.orders[i]),
-      im.contracts.erc721OrderMarketplace.getOrder(info.orders[i]),
+      im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
+      im.contracts.erc721ListingMarketplace.getListing(info.orders[i].id),
+      im.contracts.erc721OrderMarketplace.getOrder(info.orders[i].id),
+      info.orders[i].category,
+      info.orders[i].id
     ]))
        
     }
@@ -126,10 +139,11 @@ export default {
     let order_listings = []
     for(let i = 0; i < results.length; i++)
     {
-      for(let j = 0; j< results[i].length; j++)
+      for(let j = 0; j< results[i].length-2; j++)
       {
         if(results[i][j] != null){
-          order_listings.push(results[i][j])
+          console.log(results[i][j], 'result of i and j');
+          order_listings.push({'result' : results[i][j], 'type' : results[i][j+1], 'orderId' : results[i][j+2] })
         }
       }
     }
@@ -141,8 +155,8 @@ export default {
         // console.log(order_listings[order_listing],'order listing ');
         // order_listing_image.push(order_listings[order_listing])
 
-      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then(res => res.json());
-      console.log(order_listing_image);
+      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].result.tokenId}.json`).then(res => res.json());
+      // console.log(order_listing_image);
       all_nft_data.push(Object.assign(order_listings[order_listing], {'tokenUri': order_listing_image}))
     }
     console.log(all_nft_data,'data after push')
@@ -155,6 +169,51 @@ export default {
       this.noNFT = true
     }
     this.exploreLoader = false
+    await setTimeout(()=>{
+      this.clickTimed()
+    },500)
+  },
+  methods: {
+    clickTimed() {
+      document.getElementById("All-click").click();
+    },
+    myFilter(c) {
+      console.log(c, "types of filter");
+      var x, i;
+      x = document.getElementsByClassName("itemBox");
+      if (c == "All") c = "";
+      // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
+      // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+      for (i = 0; i < x.length; i++) {
+        this.w3RemoveClass(x[i], "show");
+        if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
+      }
+    },
+
+    // Show filtered elements
+    w3AddClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        if (arr1.indexOf(arr2[i]) == -1) {
+          element.className += " " + arr2[i];
+        }
+      }
+    },
+
+    // Hide elements that are not selected
+    w3RemoveClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        while (arr1.indexOf(arr2[i]) > -1) {
+          arr1.splice(arr1.indexOf(arr2[i]), 1);
+        }
+      }
+      element.className = arr1.join(" ");
+    },
   },
 
 }

@@ -319,15 +319,9 @@ export default {
       // console.log(order_listings[order_listing],'order listing ');
       // order_listing_image.push(order_listings[order_listing])
 
-      order_listing_image = await fetch(
-        `${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`
-      ).then((res) => res.json());
+      order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then((res) => res.json());
       console.log(order_listing_image);
-      all_nft_data.push(
-        Object.assign(order_listings[order_listing], {
-          tokenUri: order_listing_image,
-        })
-      );
+      all_nft_data.push(Object.assign(order_listings[order_listing], {tokenUri: order_listing_image,}));
     }
     console.log(all_nft_data, "data after push");
     this.cards = all_nft_data;
