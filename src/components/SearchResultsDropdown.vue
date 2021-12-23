@@ -21,10 +21,6 @@
                             <span class="result-title">
                                 {{ item.name }}
                             </span>
-                            
-                            <!-- <span class="result-info">
-                                {{ item.id }}
-                            </span> -->
                         </div>
                     </router-link>
                 </div>
@@ -54,9 +50,6 @@
                     </router-link>
                 </div>
             </div>
-            <!-- <div class="all-results">
-                All results
-            </div> -->
         </div>
     </transition>
 </template>

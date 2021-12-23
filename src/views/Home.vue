@@ -81,11 +81,6 @@
           </div>
         </div>
         <div class="collection-body">
-          <!-- <item-card v-for="card in cards"
-                     :key="card.image"
-                     :card="card"
-                     leftSideTextBottom="0,1 ETH"
-                     leftSideTextTop="Current bid"/> -->
           <nft-cards
             v-for="card in cards"
             :key="card.tokenId"
@@ -176,24 +171,11 @@
           </div>
         </div>
         <div class="collection-body">
-          <!-- <item-card v-for="card in cards"
-                     :key="card.id"
-                     :card="card"
-                     leftSideTextBottom="0,1 ETH"
-                     leftSideTextTop="Current bid"/>
-        </div> -->
          <explore-nft v-for="card in cards"
                      :key="card.tokenId"
                      :card="card"
                      leftSideTextBottom = "0.1 ETH"
                      leftSideTextTop="Current Price"/>
-          <!-- <nft-cards
-            v-for="card in cards"
-            :key="card.tokenId"
-            :card="card"
-            leftSideTextBottom="0.1 ETH"
-            leftSideTextTop="Current Price"
-          /> -->
           <div
             style="display: flex; justify-content: center; align-item: center"
           >
@@ -212,14 +194,6 @@
           />
           <span class="collection-title">Top Creators</span>
           <div class="collection-tags">
-            <!-- <div class="collection-tag view-all">
-              View all creators
-              <font-awesome-icon
-                :icon="['fas', 'arrow-right']"
-                size="lg"
-                class="arrow-right"
-              />
-            </div> -->
           </div>
         </div>
         <div>
@@ -245,7 +219,6 @@ import ProfileCard from "@/components/ProfileCard";
 import NftCards from "@/components/NftCards";
 import Spinner from "vue-spinkit";
 import ExploreNft from "@/components/ExploreNft";
-// import NftCards from '../components/nftCards.vue'
 
 export default {
   components: {
@@ -255,10 +228,6 @@ export default {
     Spinner,
     ExploreNft
   },
-  // pro
-  //   NftCardsps: {
-  //   loading: Object,
-  // },
   data() {
     return {
       cards: null,
@@ -276,16 +245,8 @@ export default {
     };
   },
   async created() {
-    // const loader = this.$loading.show({
-    //     container: NftCards,
-    //     canCancel: false,
-    //   });
 
     this.leftSideTextB = "0.1 ETH";
-    // console.log(users)
-    // this.cards = cards
-    // this.users = users
-    ``;
     const aChain = ["rinkeby"];
     let connect_status;
     const user = JSON.parse(localStorage.getItem("userdata"));
@@ -306,17 +267,13 @@ export default {
     } else {
       connect_status = await im.connect(aChain);
     }
-
-    console.log(connect_status, "status");
     this.im = im;
 
-    const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
+    const info = await fetch(`${BACKEND_URL}/order/explore`).then((res) =>
       res.json()
     );
-    console.log("info is", info);
-
     let results = [];
-    for (var i = 0; i < info.orders.length; i++) {
+    for (var i = 0; i < 24; i++) {
       results.push(
         await Promise.all([
           im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
@@ -327,13 +284,10 @@ export default {
         ])
       );
     }
-    console.log("result is", results);
-    // // ;
     let order_listings = [];
     for (let i = 0; i < results.length; i++) {
       for (let j = 0; j < results[i].length - 2; j++) {
         if (results[i][j] != null) {
-          console.log(results[i][j], "result of i and j");
           order_listings.push({
             result: results[i][j],
             type: results[i][j + 1],
@@ -342,7 +296,6 @@ export default {
         }
       }
     }
-    console.log(order_listings, "list of all the nfts");
 
     let order_listing_image = null;
     let all_nft_data = [];
@@ -351,119 +304,25 @@ export default {
       order_listing < order_listings.length;
       order_listing++
     ) {
-      // console.log(order_listings[order_listing],'order listing ');
-      // order_listing_image.push(order_listings[order_listing])
-
       order_listing_image = await fetch(
         `${BACKEND_URL}/metadata/${order_listings[order_listing].result.tokenId}.json`
       ).then((res) => res.json());
-      // console.log(order_listing_image);
       all_nft_data.push(
         Object.assign(order_listings[order_listing], {
           tokenUri: order_listing_image,
         })
       );
     }
-    console.log(all_nft_data, "data after push");
-
-    // const sts = await im.getEthereumNetwork();
-
-    // const info = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
-    //   res.json()
-    // );
-    // console.log("info is", info);
-    // let results = [];
-    // for (var i = 0; i < info.orders.length; i++) {
-    //   results.push(
-    //     await Promise.all([
-    //       im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
-    //       im.contracts.erc721ListingMarketplace.getListing(info.orders[i].id),
-    //       im.contracts.erc721OrderMarketplace.getOrder(info.orders[i].id),
-    //     ])
-    //   );
-    // }
-    // console.log("result is", results);
-    // // // ;
-    // let order_listings = [];
-    // for (let i = 0; i < results.length; i++) {
-    //   for (let j = 0; j < results[i].length; j++) {
-    //     if (results[i][j] != null) {
-    //       order_listings.push(results[i][j]);
-    //     }
-    //   }
-    // }
-    // console.log(order_listings, "list of all the nfts");
-
-    // let order_listing_image = null;
-    // let all_nft_data = [];
-    // for (let order_listing = 0;order_listing < order_listings.length;order_listing++) {
-    //   // console.log(order_listings[order_listing],'order listing ');
-    //   // order_listing_image.push(order_listings[order_listing])
-
-    //   order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].tokenId}.json`).then((res) => res.json());
-    //   console.log(order_listing_image);
-    //   all_nft_data.push(Object.assign(order_listings[order_listing], {tokenUri: order_listing_image,}));
-    // }
-    // console.log(all_nft_data, "data after push");
     this.cards = all_nft_data;
     this.exploreLoader = true;
     this.trendingLoader = true;
 
-    // loader.hide();
-    // let ddf =  await fetch(`${BACKEND_URL}/metadata/${order_listings[46].tokenId}.json`).then(res => res.json());
-    // console.log(ddf);
-
-    // get all the nfts
-    // const nfts_data = await fetch(`${BACKEND_URL}/nft/trending`).then(res => res.json());
-    // console.log("info is",nfts_data.nfts.length, nfts_data.nfts);
-
-    // let all_nft = [];
-    // for(var j=nfts_data.nfts.length-1; j<nfts_data.nfts.length; j++){
-    //     all_nft.push(await fetch(`${BACKEND_URL}/metadata/${nfts_data.nfts[j]}.json`).then(res => res.json()));
-
-    // }
-    // this.cards = all_nft;
-    // console.log(this.cards, 'al the nfts are here');
-
     //get all the users
-    try {
-      const users_data = await fetch(`${BACKEND_URL}/user/top-users`).then(
-        (res) => res.json()
-      );
-      console.log("users is", users_data);
-      let k = 0;
-      for (i in users_data) {
-        console.log(users_data[i][k], " users");
-        k++;
-      }
-      this.users = users_data;
-    } catch {
-      console.log("no user found");
-    }
-    this.userLoader = true;
+    await this.getUsers();
     await this.trendingClick();
     await this.exploreClick();
-    //   // let all_users;
-    //   // for(var j=111; j<nfts_data.nfts.length; j++){
-    //   //     all_users +=
 
-    //   // }
-    //   // // this.users = all_nft;
-    //   // console.log(this.cards, 'al the nfts are here');
-
-    //   // }
-    //   // console.log('result is',results, results[1].tokenId, results[1].length);
-    //   // ;
-    //   // const feature_image = await fetch(`${BACKEND_URL}/metadata/${results[1].tokenId}.json`).then(res => res.json());
-    //   // this.feature_id = feature_image.image
-
-    try {
-      const { data } = await this.axios.get(`${this.$cms}/background`);
-      console.log(data, "data");
-      this.cssProps.backgroundImage = `url(${this.$cms}${data.file.url})`;
-    } catch (e) {
-      console.log(e);
-    }
+    await this.getBackgroundpic();
   },
   methods: {
     trendingClick() {
@@ -473,28 +332,42 @@ export default {
       document.getElementById("Artwork").click();
     },
     exploreFilter(c) {
-      console.log(c, "types of filter");
       var x, i;
       x = document.getElementsByClassName("itemBox");
       
-      // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
-      // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
       for (i = 0; i < x.length; i++) {
         this.w3RemoveClass(x[i], "show");
         if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
       }
     },
     trendingFilter(c) {
-      console.log(c, "types of filter");
       var x, i;
       x = document.getElementsByClassName("itemBox");
-      // if (c == "Timed")
-      // console.log(c, 'ccccccccccccccccccccccccccccccccccccccccccccccccc')
-      // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+
       for (i = 0; i < x.length; i++) {
         this.w3RemoveClass(x[i], "show");
         if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
       }
+    },
+    async getUsers(){
+    try {
+      const users_data = await fetch(`${BACKEND_URL}/user/top-users`).then(
+        (res) => res.json()
+      );
+      this.users = users_data;
+    } catch {
+      console.log("no user found");
+    }
+    this.userLoader = true;
+    },
+    async getBackgroundpic(){
+      try {
+      const { data } = await this.axios.get(`${this.$cms}/background`);
+      console.log(data, "data");
+      this.cssProps.backgroundImage = `url(${this.$cms}${data.file.url})`;
+    } catch (e) {
+      console.log(e);
+    }
     },
 
     // Show filtered elements

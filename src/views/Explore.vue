@@ -137,15 +137,8 @@ export default {
     } else {
       connect_status = await im.connect(aChain);
     }
-
-
-    // const aChain = 'rinkeby';
-    // let connect_status = await im.connect(aChain);
-    console.log(connect_status, 'status')
     this.im = im
     const info = await fetch(`${BACKEND_URL}/order/explore`).then(res => res.json());
-    console.log("info is",info);
-
     let results = [];
     for(var i=0; i<info.orders.length;i++){
       results.push(await Promise.all([
@@ -156,33 +149,23 @@ export default {
       info.orders[i].id
     ]))
        
-    }
-    console.log('result is',results);
-    // // ;
+    }    // // ;
     let order_listings = []
     for(let i = 0; i < results.length; i++)
     {
       for(let j = 0; j< results[i].length-2; j++)
       {
         if(results[i][j] != null){
-          console.log(results[i][j], 'result of i and j');
           order_listings.push({'result' : results[i][j], 'type' : results[i][j+1], 'orderId' : results[i][j+2] })
         }
       }
     }
-    console.log(order_listings, 'list of all the nfts')
-
     let order_listing_image = null
     let all_nft_data = []
     for(let order_listing = 0; order_listing < order_listings.length; order_listing++){
-        // console.log(order_listings[order_listing],'order listing ');
-        // order_listing_image.push(order_listings[order_listing])
-
       order_listing_image = await fetch(`${BACKEND_URL}/metadata/${order_listings[order_listing].result.tokenId}.json`).then(res => res.json());
-      // console.log(order_listing_image);
       all_nft_data.push(Object.assign(order_listings[order_listing], {'tokenUri': order_listing_image}))
     }
-    console.log(all_nft_data,'data after push')
 
     if(all_nft_data.length > 0){
       this.noNFT = false

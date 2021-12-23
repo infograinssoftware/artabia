@@ -1,23 +1,6 @@
 <template>
   <div :class="`itemBox ${card.type}`">
-    <!-- <a :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`" class="nft-cardClickable"> -->
-    <!-- <b-card
-    v-if="card"
-    :img-src="isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image"
-    :img-alt="checkType(card.tokenUri.image)"
-    img-top
-    tag="article"
-    class="mb-0"
-  > -->
-    <!-- 
-    <h6 class="my-0"> {{card.tokenUri.name}}</h6><br>
-    <b-card-text class="flex space-x-3 items-center mt-0">
-      <img :src="usernftprofile" :alt="owernImage(card.owner)" class="user-avatar">
-      <span v-if="nft_user"> @ {{nft_user}}</span>
-    </b-card-text> -->
     <!-- custom card  -->
-
-
     <div v-if="card" class="card" style="width: 18rem" tag="article" :v-once="checkType(card.tokenUri.image)">
       <a
         :href="`/view-order/ethereum/${
@@ -58,7 +41,7 @@
 
           <figure>
             <model-gltf
-              src="blob:http://localhost:8080/2d13cf28-4ab1-440b-97d6-1ca0762c7b84"
+              src="/"
             ></model-gltf>
           </figure>
 
@@ -72,17 +55,6 @@
             />
           </video>
         </div>
-
-
-
-
-        <!-- <img
-          :src="
-            isAudio || !card.tokenUri.image ? defaultImg : card.tokenUri.image
-          "
-          class="card-img-top"
-          :alt="checkType(card.tokenUri.image)"
-        /> -->
       </a>
 
       <div class="card-body">
@@ -97,8 +69,6 @@
           <span v-if="nft_user"> @ {{ nft_user }}</span>
         </div>
       </div>
-
-      <!-- </div> -->
       <!-- custom card  -->
       <template>
         <a
@@ -133,31 +103,16 @@
                   </vue-countdown>
                 </span>
               </span>
-              <!-- <b-dropdown id="dropdown" dropright class="m-2" icon="three-dots-vertical">
-            <b-dropdown-item href="#">Transfer</b-dropdown-item>
-            <b-dropdown-item href="#">List (On Marketplace)</b-dropdown-item>
-          </b-dropdown> -->
-              <!-- <div class="carditem_dots">
-            <b-dropdown dropright toggle-class="carditem_dots_tgl p-0 has-background-white btn-light" no-caret>
-              <template #button-content>
-                <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon> 
-              </template>
-              <b-dropdown-item href="#">Transfer</b-dropdown-item>
-              <b-dropdown-item href="#">List (On Marketplace)</b-dropdown-item>
-            </b-dropdown>
-          </div> -->
             </div>
           </div>
         </a>
       </template>
     </div>
-    <!-- </a> -->
   </div>
 </template>
 
 <script>
 import VueCountdown from "@chenfengyuan/vue-countdown";
-// import { extend } from 'vue/types/umd';
 import { ModelGltf } from "/src/assets/plugin/vue-model";
 
 export default {
@@ -194,16 +149,6 @@ export default {
     leftSideTextTopClass: String,
     leftSideTextBottom: String,
   },
-  // watch: {
-  //   id: function(newId) {
-  //     console.log(`watch triggered, value of id is: ${newId}`);
-  //     axios
-  //       .get('https://api.coindesk.com/v1/bpi/currentprice.json',
-  //         { params: { id: newId }}
-  //       )
-  //       .then(response => (this.info = response))
-  //   }
-  // },
   methods: {
     shortenAddress(ownerAddress) {
       return (
@@ -213,31 +158,26 @@ export default {
       );
     },
     async owernImage(ownerAddress) {
-      console.log("hhhhhhhhhhhhhhhhhhhhhhhhh");
       let nftOwnerDetail = await this.axios
         .post(
-          `${BACKEND_URL}/user/user`,
+          `${BACKEND_URL}/user/id`,
           { id: ownerAddress },
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: JSON.parse(localStorage.getItem("userdata")).token,
             },
           }
         )
         .then((res) => res);
-      console.log(nftOwnerDetail.data.user.name);
-      this.nft_user = nftOwnerDetail.data.user.name;
+      console.log(nftOwnerDetail, 'nftOwnerDetail')
+      this.nft_user = nftOwnerDetail.data.user.username;
       this.usernftprofile = nftOwnerDetail.data.user.profileImage;
-      // return [this.nft_user, this.usernftprofile]
     },
     ethPrice(weiPrice) {
       const etherValue = im.web3.utils.fromWei(weiPrice, "ether");
       return etherValue;
     },
     biddingTime(endTime) {
-      console.log(typeof endTime, typeof Date.now(), "endtime is here");
-      // console.log(endTime - Date.now()/1000) / 1000, 'difference date');
       return endTime * 1000 - Date.now();
     },
     async checkType(url) {
@@ -249,36 +189,13 @@ export default {
               : (this.isAudio = true)
           )
           .catch((err) => console.log(err.message));
-        console.log(isAudiotype, "6this is the audio");
         this.ext = isAudiotype.split("/")[0];
       } catch (e) {
         this.ext = "model3d";
-        console.log("got the error");
       }
-      // if(isAudiotype == true){
-      //   this.isAudio = true
-      // }
-      // else{
-      //   this.isAudio = false
-      // }
+     
       return url;
     },
-
-    // async checkType(url) {
-    //   let isAudiotype = await fetch(url, { method: "HEAD" })
-    //     .then((res) =>
-    //       true
-    //         ? res.ok && res.headers.get("content-type").startsWith("audio")
-    //         : (this.isAudio = true)
-    //     )
-    //     .catch((err) => console.log(err.message));
-    //   if (isAudiotype == true) {
-    //     this.isAudio = true;
-    //   } else {
-    //     this.isAudio = false;
-    //   }
-    //   return url;
-    // },
   },
 };
 </script>

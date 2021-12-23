@@ -14,21 +14,6 @@
           </div>
           </a>
 <!-- ----Custom card----- -->
-    <!-- <a :href="`/view-user/${user.id}`"> -->
-    <!-- <b-card
-        v-if="user"
-        :img-src="user.coverImage? user.coverImage : defaultImg"
-        :img-alt="user.name"
-        img-top
-        tag="article"
-        class="mb-2"
-    > -->
-        <!-- <img :src="user.profileImage ? user.profileImage : defaultImg" alt="" class="user-avatar">
-        <h4 class="card-title">{{ user.name ? user.name : shortenAddress(user.id) }}</h4>
-        <router-link to="#" class="username">
-            <span>@{{ user.username  ? user.name : shortenAddress(user.id)}}</span>
-        </router-link>
-        <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span> -->
         <template>
             <div class="footer-slot card-footer" v-if="showfu">
                 <div class="followers">
@@ -37,13 +22,11 @@
                     </span>
                     Followers
                 </div>
-                <div class="follow-btn " @click="isFollowed ? Unfollow() : follow()"  >
+                <div class="follow-btn " @click="isFollowed ? Unfollow : follow"  >
                     {{ isFollowed ? 'Unfollow' : 'Follow'}}
                 </div>
             </div>
         </template>
-    <!-- </b-card> -->
-    <!-- </a> -->
         </div>
 </template>
 
@@ -67,7 +50,6 @@
         computed: {
             formatedDate() {
                 if (this.user.createdDate) {
-                    console.log(this.user.createdDate, 'this is the date after the creations of user')
                     return moment(this.card.user.createdDate).format('MMM Do, YYYY')
                 }
                 return ''
@@ -75,26 +57,20 @@
         },
         methods: {
             shortenAddress(ethAddress) {
-                console.log(ethAddress, 'user address')
                 return ethAddress.substring(0, 6) + '...' + ethAddress.substring(ethAddress.length - 4)
             },
             async follow(id){
-                console.log('follow is called')
                 let followedUnfollowed1 =  await fetch(`https://artabia.com:3001/user/follow`, { method : "post", body : {id : id}, headers : { 
                     'Content-Type' : 'application/json',
                     Authorization : JSON.parse(localStorage.getItem('userdata')).token
                 }}).then((res) => res)
-                console.log(followedUnfollowed1, 'id is here')
                 this.isFollowed = false
-                // await this.$forceUpdate()
             },
             async Unfollow(id){
-                console.log('unfollow is called')
                 let followedUnfollowed =  await this.axios.post(`https://artabia.com:3001/user/unfollow`, {id : id}, { headers : { 
                     'Content-Type' : 'application/json',
                     Authorization : JSON.parse(localStorage.getItem('userdata')).token
                 }}).then((res) => res)
-                console.log(followedUnfollowed, 'id is here')
                 this.isFollowed = true
             },
             async isFollowing(userId){
@@ -102,7 +78,6 @@
                     'Content-Type' : 'application/json',
                     Authorization : JSON.parse(localStorage.getItem('userdata')).token
                 }}).then(res => res.json())
-                console.log(isUserFollowing.follows, 'is status')
                 if(isUserFollowing.follows == true){
                     this.isFollowed = true
                 }
@@ -110,7 +85,6 @@
                     this.isFollowed = false
                 }
                 this.showfu = true
-                // return isUserFollowing.follows
  
             }
     }   }
