@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <figure>
-      <img v-if="isExt === 'img'" class="w-full object-scale-down" :src="src" alt="name">
+  <div style="overflow: hidden; height:300px">
+    <figure style="height:100%; width:100%">
+      <img v-if="isExt === 'img'" class="w-full view_orderImg" :src="src" alt="name">
     </figure>
 
 
@@ -70,5 +70,9 @@ export default {
 </script>
 
 <style scoped>
-
+.view_orderImg{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 </style>

@@ -27,10 +27,10 @@
       >
 
       <div class="flex-1 flex justify-center items-center preview">
-          <figure>
+          <figure class="w-100">
             <img
               v-if="ext === 'image'"
-              class="h-80 object-scale-down card-img-top"
+              class="h-80 card-img-top"
               :src="
                 isAudio || !card.tokenUri.image
                   ? defaultImg
@@ -42,7 +42,7 @@
 
           <figure
             v-if="ext === 'audio'"
-            class="bg-audio h-80 bg-cover flex items-end justify-center py-3"
+            class="bg-audio flex items-end justify-center w-100 audio_Div"
           >
             <audio controls>
               <source
@@ -284,6 +284,18 @@ export default {
 </script>
 
 <style scoped>
+.audio_Div{
+  border-radius: 10px 10px 0px 0px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+}
+
+.audio_Div audio{
+  padding: 15px;
+  border-radius: 25px;
+}
+
 .card {
   max-width: 270px;
   min-width: 270px;
