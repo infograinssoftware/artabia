@@ -5,7 +5,7 @@
       <div class="collection-header flex-col md:flex-row">
 
         <div class="collection-tags justify-center mb-6">
-          <button id="All-click" v-on:click="myFilter('All')" class="btn">
+          <button id="All-click" v-on:click="exploreFilter('All')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -15,7 +15,7 @@
             <span>All NFTs</span>
           </div>
           </button>
-          <button v-on:click="myFilter('Artwork')" class="btn">
+          <button v-on:click="exploreFilter('Artwork')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -25,7 +25,7 @@
             <span>Artwork</span>
           </div>
           </button>
-          <button v-on:click="myFilter('Photography')" class="btn">
+          <button v-on:click="exploreFilter('Photography')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -35,7 +35,7 @@
             <span>Photography</span>
           </div>
           </button>
-          <button v-on:click="myFilter('Audio')" class="btn">
+          <button v-on:click="exploreFilter('Audio')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -45,7 +45,7 @@
             <span>Audio</span>
           </div>
           </button>
-          <button v-on:click="myFilter('Video')" class="btn">
+          <button v-on:click="exploreFilter('Video')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -55,7 +55,7 @@
             <span>Video</span>
           </div>
           </button>
-          <button v-on:click="myFilter('Collectibles')" class="btn">
+          <button v-on:click="exploreFilter('Collectibles')" class="btn">
           <div class="collection-tag">
             <img
               :src="require('@/assets/images/bg-pattern.png')"
@@ -116,11 +116,34 @@ export default {
   async created() {
     // this.cards = cards
     // this.users = users
-    const aChain = 'rinkeby';
-     let connect_status = await im.connect(aChain);
+
+    const aChain = ["rinkeby"];
+    let connect_status;
+    const user = JSON.parse(localStorage.getItem("userdata"));
+    if (window.ethereum.selectedAddress === null) {
+      localStorage.removeItem("userdata");
+      connect_status = await im.connect(
+        aChain,
+        ethereumNode,
+        "0x0000000000000000000000000000000000000000"
+      );
+    }
+    if (!user) {
+      connect_status = await im.connect(
+        aChain,
+        ethereumNode,
+        "0x0000000000000000000000000000000000000000"
+      );
+    } else {
+      connect_status = await im.connect(aChain);
+    }
+
+
+    // const aChain = 'rinkeby';
+    // let connect_status = await im.connect(aChain);
     console.log(connect_status, 'status')
     this.im = im
-    const info = await fetch(`${BACKEND_URL}/order/trending`).then(res => res.json());
+    const info = await fetch(`${BACKEND_URL}/order/explore`).then(res => res.json());
     console.log("info is",info);
 
     let results = [];
@@ -170,14 +193,14 @@ export default {
     }
     this.exploreLoader = false
     await setTimeout(()=>{
-      this.clickTimed()
+      this.exploreClick()
     },500)
   },
   methods: {
-    clickTimed() {
+    exploreClick() {
       document.getElementById("All-click").click();
     },
-    myFilter(c) {
+    exploreFilter(c) {
       console.log(c, "types of filter");
       var x, i;
       x = document.getElementsByClassName("itemBox");
@@ -200,6 +223,7 @@ export default {
           element.className += " " + arr2[i];
         }
       }
+          console.log(arr1, 'arr1', arr2, arr2.length);
     },
 
     // Hide elements that are not selected
@@ -212,6 +236,7 @@ export default {
           arr1.splice(arr1.indexOf(arr2[i]), 1);
         }
       }
+      console.log(arr1, 'arr1', arr2.length);
       element.className = arr1.join(" ");
     },
   },
