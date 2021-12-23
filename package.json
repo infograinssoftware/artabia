@@ -25,7 +25,7 @@
         "core-js": "^3.6.5",
         "ethereumjs-abi": "^0.6.8",
         "express": "^4.17.1",
-        "integration": "git+https://Artabia@bitbucket.org/Artabia/artabianewintegrationcode.git",
+        "integration": "./artabianewintegrationcode",
         "marked": "^3.0.7",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.28",
