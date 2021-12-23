@@ -30,15 +30,15 @@
         </router-link>
         <span class="user-bio">{{ user.bio ? user.bio : 'Lorem ipsum' }}</span> -->
         <template>
-            <div class="footer-slot card-footer">
+            <div class="footer-slot card-footer" v-if="showfu">
                 <div class="followers">
                     <span>
                         {{ user.followerCount }}
                     </span>
                     Followers
                 </div>
-                <div class="follow-btn" @click="followUnfollow(user.id)">
-                    Unfollow
+                <div class="follow-btn " @click="isFollowed ? Unfollow() : follow()"  >
+                    {{ isFollowed ? 'Unfollow' : 'Follow'}}
                 </div>
             </div>
         </template>
@@ -52,6 +52,8 @@
     export default {
         data(){
             return{
+                showfu: false,
+                isFollowed : null,
                 defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80"
             }
         },
@@ -60,7 +62,7 @@
             user: {
                 type: Object,
                 required: true
-            }
+            },
         },
         computed: {
             formatedDate() {
@@ -76,9 +78,40 @@
                 console.log(ethAddress, 'user address')
                 return ethAddress.substring(0, 6) + '...' + ethAddress.substring(ethAddress.length - 4)
             },
-            followUnfollow(id){
-                // this.axios.post(`https://artabia.com:3001/user/follow`, {})
-                console.log(id, 'id is here')
+            async follow(id){
+                console.log('follow is called')
+                let followedUnfollowed1 =  await fetch(`https://artabia.com:3001/user/follow`, { method : "post", body : {id : id}, headers : { 
+                    'Content-Type' : 'application/json',
+                    Authorization : JSON.parse(localStorage.getItem('userdata')).token
+                }}).then((res) => res)
+                console.log(followedUnfollowed1, 'id is here')
+                this.isFollowed = false
+                // await this.$forceUpdate()
+            },
+            async Unfollow(id){
+                console.log('unfollow is called')
+                let followedUnfollowed =  await this.axios.post(`https://artabia.com:3001/user/unfollow`, {id : id}, { headers : { 
+                    'Content-Type' : 'application/json',
+                    Authorization : JSON.parse(localStorage.getItem('userdata')).token
+                }}).then((res) => res)
+                console.log(followedUnfollowed, 'id is here')
+                this.isFollowed = true
+            },
+            async isFollowing(userId){
+                let isUserFollowing = await fetch(`https://artabia.com:3001/user/is-following/${userId}`,{ headers : { 
+                    'Content-Type' : 'application/json',
+                    Authorization : JSON.parse(localStorage.getItem('userdata')).token
+                }}).then(res => res.json())
+                console.log(isUserFollowing.follows, 'is status')
+                if(isUserFollowing.follows == true){
+                    this.isFollowed = true
+                }
+                else{
+                    this.isFollowed = false
+                }
+                this.showfu = true
+                // return isUserFollowing.follows
+ 
             }
     }   }
 </script>
