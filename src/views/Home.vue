@@ -317,7 +317,7 @@ export default {
     console.log('got the Tcards', Tall_nft_data)
     this.Tcards = Tall_nft_data;
     this.trendingLoader = true;
-    await this.trendingClick();
+    
     // Fetching the Explore data
     console.log('sdfdsfsdfdsfdsf');
     const info = await fetch(`${BACKEND_URL}/order/explore`).then((res) =>
@@ -368,7 +368,7 @@ export default {
     console.log(all_nft_data, 'all_nft_data');
     this.cards = all_nft_data;
     this.exploreLoader = true;
-
+    await this.trendingClick();
     //get all the users
     await this.getUsers();
     await this.exploreClick();
