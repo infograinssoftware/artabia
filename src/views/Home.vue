@@ -68,7 +68,7 @@
                 <span>Open for bids</span>
               </div>
             </button>
-            <button v-on:click="trendingFilter('Fixed')" class="btn">
+            <button id="Fixed-click" v-on:click="trendingFilter('Fixed')" class="btn">
               <div class="collection-tag">
                 <img
                   :src="require('@/assets/images/icons/price-tag-icon.png')"
@@ -82,9 +82,9 @@
         </div>
         <div class="collection-body">
           <nft-cards
-            v-for="card in cards"
-            :key="card.tokenId"
-            :card="card"
+            v-for="card1 in Tcards"
+            :key="card1.tokenId"
+            :card="card1"
             leftSideTextBottom="0.1 ETH"
             leftSideTextTop="Current Price"
           />
@@ -231,6 +231,7 @@ export default {
   data() {
     return {
       cards: null,
+      Tcards : null,
       users: null,
       feature_id: null,
       top_nft: null,
@@ -269,11 +270,62 @@ export default {
     }
     this.im = im;
 
+    //Fetching api data
+
+    const trendingData = await fetch(`${BACKEND_URL}/order/trending`).then((res) =>
+      res.json()
+    );
+    console.log(trendingData, 'trending')
+    let Tresults = [];
+    for (var p = 0; p < 12; p++) {
+      Tresults.push(
+        await Promise.all([
+          im.contracts.erc721AuctionMarketplace.getAuction(trendingData.orders[p].id),
+          im.contracts.erc721ListingMarketplace.getListing(trendingData.orders[p].id),
+          im.contracts.erc721OrderMarketplace.getOrder(trendingData.orders[p].id),
+          trendingData.orders[p].category,
+          trendingData.orders[p].id,
+        ])
+      );
+    }
+    console.log(Tresults, 'trending3')
+    let Torder_listings = [];
+    for (let q = 0; q < Tresults.length; q++) {
+      for (let r = 0; r < Tresults[q].length - 2; r++) {
+        if (Tresults[q][r] != null) {
+          Torder_listings.push({
+            result: Tresults[q][r],
+            type: Tresults[q][r + 1],
+            orderId: Tresults[q][r + 2],
+          });
+        }
+      }
+    }
+    console.log(Torder_listings, 'Torder_listings')
+    let Torder_listing_image = null;
+    let Tall_nft_data = [];
+    for(let Torder_listing = 0; Torder_listing < Torder_listings.length; Torder_listing++) {
+      Torder_listing_image = await fetch(
+        `${BACKEND_URL}/metadata/${Torder_listings[Torder_listing].result.tokenId}.json`
+      ).then((res) => res.json());
+      Tall_nft_data.push(
+        Object.assign(Torder_listings[Torder_listing], {
+          tokenUri: Torder_listing_image,
+        })
+      );
+    }
+    console.log('got the Tcards', Tall_nft_data)
+    this.Tcards = Tall_nft_data;
+    this.trendingLoader = true;
+    
+    // Fetching the Explore data
+    console.log('sdfdsfsdfdsfdsf');
     const info = await fetch(`${BACKEND_URL}/order/explore`).then((res) =>
       res.json()
     );
+    console.log(info, 'info')
     let results = [];
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < 12; i++) {
       results.push(
         await Promise.all([
           im.contracts.erc721AuctionMarketplace.getAuction(info.orders[i].id),
@@ -296,7 +348,7 @@ export default {
         }
       }
     }
-
+    console.log(order_listings, 'info')
     let order_listing_image = null;
     let all_nft_data = [];
     for (
@@ -313,9 +365,9 @@ export default {
         })
       );
     }
+    console.log(all_nft_data, 'all_nft_data');
     this.cards = all_nft_data;
     this.exploreLoader = true;
-    this.trendingLoader = true;
 
     //get all the users
     await this.getUsers();
@@ -326,13 +378,14 @@ export default {
   },
   methods: {
     trendingClick() {
-      document.getElementById("Timed-click").click();
+      console.log('Timed-click');
+      document.getElementById("Fixed-click").click();
     },
     exploreClick() {
       document.getElementById("Artwork").click();
     },
     exploreFilter(c) {
-      var x, i;
+      let x, i;
       x = document.getElementsByClassName("itemBox");
       
       for (i = 0; i < x.length; i++) {
@@ -341,11 +394,13 @@ export default {
       }
     },
     trendingFilter(c) {
-      var x, i;
-      x = document.getElementsByClassName("itemBox");
-
+      console.log(c, 'sdfdsfds')
+      let x, i;
+      x = document.getElementsByClassName("TitemBox");
+      console.log(x,)
       for (i = 0; i < x.length; i++) {
         this.w3RemoveClass(x[i], "show");
+        console.log(x[i].className.indexOf(c), 'log')
         if (x[i].className.indexOf(c) > -1) this.w3AddClass(x[i], "show");
       }
     },
@@ -355,6 +410,7 @@ export default {
         (res) => res.json()
       );
       this.users = users_data;
+      console.log(this.users, 'users dataaaaaaaaaaaaa')
     } catch {
       console.log("no user found");
     }
@@ -372,9 +428,10 @@ export default {
 
     // Show filtered elements
     w3AddClass(element, name) {
-      var i, arr1, arr2;
+      let i, arr1, arr2;
       arr1 = element.className.split(" ");
       arr2 = name.split(" ");
+      console.log('arr2', arr2.length, arr2)
       for (i = 0; i < arr2.length; i++) {
         if (arr1.indexOf(arr2[i]) == -1) {
           element.className += " " + arr2[i];
@@ -384,14 +441,16 @@ export default {
 
     // Hide elements that are not selected
     w3RemoveClass(element, name) {
-      var i, arr1, arr2;
+      let i, arr1, arr2;
       arr1 = element.className.split(" ");
       arr2 = name.split(" ");
+      console.log(arr1, arr2, i);
       for (i = 0; i < arr2.length; i++) {
         while (arr1.indexOf(arr2[i]) > -1) {
           arr1.splice(arr1.indexOf(arr2[i]), 1);
         }
       }
+      console.log(arr1);
       element.className = arr1.join(" ");
     },
   },

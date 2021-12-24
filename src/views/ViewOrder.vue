@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-7xl mx-auto my-5 px-5 md:px-16 xl:px-0 lg:space-x-10 flex  flex-col lg:flex-row">
+  <section class="max-w-7xl mx-auto my-5 px-5 md:px-16 xl:px-0 lg:space-x-10 flex  flex-col lg:flex-row" :v-once="increaseView(orderId)" >
     <div class="flex-1 space-y-3 mb-10 sm:mb-0">
 
 
@@ -390,6 +390,10 @@ export default {
   },
 
   methods: {
+    async increaseView(id){
+      let view = await fetch(`https://artabia.com:3001/order/${id}/view`,{ "method" : "post"}).then((res)=>res)
+      console.log(view, 'view is here')
+    },
     close() {
       this.showModal = false
     },

@@ -1,21 +1,23 @@
 <template>
   <div
-    :class="`itemBox ${card.price ? 'Fixed' : ''} ${
-      card.offer ? 'Open_bids' : ''
-    } ${card.endsAt ? 'Timed' : ''} `"
-  >
+    :class="`TitemBox ${card.result.price ? 'Fixed' : ''} ${
+      card.result.offer ? 'Open_bids' : ''
+    } ${card.result.endsAt ? 'Timed' : ''} `"
+  > 
     <!-- custom card  -->
-    <div v-if="card" class="card" style="width: 18rem" tag="article">
+    <div v-if="card" class="card" style="width: 18rem" tag="article" :v-once="checkType(card.tokenUri.image)">
       <a
-        :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`"
+        :href="`/view-order/ethereum/${
+          card.orderId !== null ? card.orderId : ''
+        }`"
         class="nft-cardClickable"
-        :v-once="checkType(card.tokenUri.image)"
       >
-        <div class="flex-1 flex justify-center items-center preview">
-          <figure>
+
+      <div class="flex-1 flex justify-center items-center preview">
+          <figure class="w-100">
             <img
               v-if="ext === 'image'"
-              class="h-80 object-scale-down card-img-top"
+              class="h-80 card-img-top"
               :src="
                 isAudio || !card.tokenUri.image
                   ? defaultImg
@@ -27,7 +29,7 @@
 
           <figure
             v-if="ext === 'audio'"
-            class="bg-audio h-80 bg-cover flex items-end justify-center py-3"
+            class="bg-audio flex items-end justify-center w-100 audio_Div"
           >
             <audio controls>
               <source
@@ -43,7 +45,7 @@
 
           <figure>
             <model-gltf
-              src="blob:http://localhost:8080/2d13cf28-4ab1-440b-97d6-1ca0762c7b84"
+              src="/"
             ></model-gltf>
           </figure>
 
@@ -65,34 +67,39 @@
         <div class="flex space-x-3 items-center mt-0">
           <img
             :src="usernftprofile"
-            :alt="owernImage(card.owner)"
+            :alt="owernImage(card.result.owner)"
             class="user-avatar"
           />
           <span v-if="nft_user"> @ {{ nft_user }}</span>
         </div>
       </div>
-
       <!-- custom card  -->
       <template>
         <a
           class="nft-cardClickable"
-          :href="`/view-order/ethereum/${card.tokenUri.external_url.slice(10)}`"
+          :href="`/view-order/ethereum/${
+            card.orderId !== null ? card.orderId : ''
+          }`"
         >
           <div class="footer-slot">
             <div class="price price flex px-2 py-2.5 items-center">
               <span class="flex flex-col text-left">
                 <span :class="leftSideTextTopClass"
-                  >Current {{ card.price ? "Price" : "Bid" }}
+                  >Current {{ card.result.price ? "Price" : "Bid" }}
                 </span>
-                <span v-if="card.price">{{ ethPrice(card.price) }}</span>
-                <span v-if="card.offer">{{ ethPrice(card.offer) }}</span>
+                <span v-if="card.result.price">{{
+                  ethPrice(card.result.price)
+                }}</span>
+                <span v-if="card.result.offer">{{
+                  ethPrice(card.result.offer)
+                }}</span>
               </span>
 
-              <span v-if="card.endsAt" class="flex flex-col text-right">
+              <span v-if="card.result.endsAt" class="flex flex-col text-right">
                 <span> Ending in</span>
                 <span>
                   <vue-countdown
-                    :time="`${biddingTime(parseInt(card.endsAt))}`"
+                    :time="`${biddingTime(parseInt(card.result.endsAt))}`"
                     v-slot="{ days, hours, minutes, seconds }"
                   >
                     {{ days }} d, {{ hours }} h, {{ minutes }} m,
@@ -147,8 +154,12 @@ export default {
     leftSideTextTopClass: String,
     leftSideTextBottom: String,
   },
+  created(){
+    console.log('created')
+  },
   methods: {
     shortenAddress(ownerAddress) {
+      console.log('shortend address')
       return (
         ownerAddress.substring(0, 6) +
         "..." +
@@ -275,7 +286,7 @@ export default {
   text-decoration: none;
   color: inherit;
 }
-.itemBox {
+.TitemBox {
   display: none;
 }
 </style>

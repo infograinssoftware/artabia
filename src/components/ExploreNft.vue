@@ -171,7 +171,7 @@ export default {
         .then((res) => res);
       console.log(nftOwnerDetail, 'nftOwnerDetail')
       this.nft_user = nftOwnerDetail.data.user.username;
-      this.usernftprofile = nftOwnerDetail.data.user.profileImage;
+      this.usernftprofile = nftOwnerDetail.data.user.profile_image;
     },
     ethPrice(weiPrice) {
       const etherValue = im.web3.utils.fromWei(weiPrice, "ether");

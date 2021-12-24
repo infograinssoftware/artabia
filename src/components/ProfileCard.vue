@@ -15,7 +15,7 @@
           </a>
 <!-- ----Custom card----- -->
         <template>
-            <div class="footer-slot card-footer" v-if="showfu">
+            <div class="footer-slot card-footer">
                 <div class="followers">
                     <span>
                         {{ user.followerCount }}
@@ -35,7 +35,6 @@
     export default {
         data(){
             return{
-                showfu: false,
                 isFollowed : null,
                 defaultImg : "https://images.unsplash.com/photo-1542241647-9cbbada2b309?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80"
             }
@@ -84,7 +83,6 @@
                 else{
                     this.isFollowed = false
                 }
-                this.showfu = true
  
             }
     }   }
